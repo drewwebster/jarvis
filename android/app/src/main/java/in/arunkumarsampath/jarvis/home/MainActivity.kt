@@ -1,7 +1,8 @@
-package `in`.arunkumarsampath.jarvis
+package `in`.arunkumarsampath.jarvis.home
 
-import android.support.v7.app.AppCompatActivity
+import `in`.arunkumarsampath.jarvis.R
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
