@@ -26,6 +26,7 @@ import `in`.arunkumarsampath.jarvis.common.base.BaseActivity
 import `in`.arunkumarsampath.jarvis.di.activity.ActivityComponent
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -53,6 +54,8 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
+
+        setupChatUi()
     }
 
     override fun onStart() {
@@ -75,6 +78,13 @@ class MainActivity : BaseActivity() {
                     Timber.e(e)
                 }
             }
+        }
+    }
+
+    private fun setupChatUi() {
+        chatRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = ConversationAdapter()
         }
     }
 
