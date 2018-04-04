@@ -19,21 +19,48 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package `in`.arunkumarsampath.jarvis.home
+package `in`.arunkumarsampath.jarvis.common.base
 
-import `in`.arunkumarsampath.jarvis.R
-import `in`.arunkumarsampath.jarvis.common.base.BaseActivity
+import `in`.arunkumarsampath.jarvis.Jarvis
 import `in`.arunkumarsampath.jarvis.di.activity.ActivityComponent
+import `in`.arunkumarsampath.jarvis.di.activity.ActivityModule
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.*
+import android.support.annotation.LayoutRes
+import android.support.v7.app.AppCompatActivity
+import butterknife.ButterKnife
+import butterknife.Unbinder
+import io.reactivex.disposables.CompositeDisposable
 
-class MainActivity : BaseActivity() {
-    override val layoutRes = R.layout.activity_main
+abstract class BaseActivity : AppCompatActivity() {
+    private var unbinder: Unbinder? = null
 
-    override fun inject(activityComponent: ActivityComponent) = activityComponent.inject(this)
+    protected var activityComponent: ActivityComponent? = null
+    protected val subs = CompositeDisposable()
+
+    @get:LayoutRes
+    protected abstract val layoutRes: Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        activityComponent = (application as Jarvis)
+                .getAppComponent()
+                .newActivityComponent(ActivityModule(this))
+        inject(activityComponent!!)
+
         super.onCreate(savedInstanceState)
-        setSupportActionBar(toolbar)
+
+        @LayoutRes val layoutRes = layoutRes
+        if (layoutRes != 0) {
+            setContentView(layoutRes)
+            unbinder = ButterKnife.bind(this)
+        }
+    }
+
+    internal abstract fun inject(activityComponent: ActivityComponent)
+
+    override fun onDestroy() {
+        subs.clear()
+        unbinder?.unbind()
+        activityComponent = null
+        super.onDestroy()
     }
 }

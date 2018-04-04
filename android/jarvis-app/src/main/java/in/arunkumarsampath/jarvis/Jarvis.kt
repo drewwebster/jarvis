@@ -21,6 +21,8 @@
 
 package `in`.arunkumarsampath.jarvis
 
+import `in`.arunkumarsampath.jarvis.di.app.AppComponent
+import `in`.arunkumarsampath.jarvis.di.app.DaggerAppComponent
 import android.app.Application
 import timber.log.Timber
 
@@ -28,9 +30,16 @@ import timber.log.Timber
  * Created by arunk on 06-03-2018.
  */
 class Jarvis : Application() {
+    private var appComponent: AppComponent? = null
 
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
+
+        appComponent = DaggerAppComponent.builder().build()
+    }
+
+    fun getAppComponent(): AppComponent {
+        return appComponent!!
     }
 }

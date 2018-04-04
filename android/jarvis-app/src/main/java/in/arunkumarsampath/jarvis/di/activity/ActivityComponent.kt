@@ -24,10 +24,13 @@ package `in`.arunkumarsampath.jarvis.di.activity
 import `in`.arunkumarsampath.jarvis.di.fragment.FragmentComponent
 import `in`.arunkumarsampath.jarvis.di.fragment.FragmentModule
 import `in`.arunkumarsampath.jarvis.di.scopes.PerActivity
+import `in`.arunkumarsampath.jarvis.home.MainActivity
 import dagger.Subcomponent
 
 @PerActivity
 @Subcomponent(modules = [(ActivityModule::class)])
 interface ActivityComponent {
     fun newFragmentComponent(fragmentModule: FragmentModule): FragmentComponent
+
+    fun inject(mainActivity: MainActivity)
 }
