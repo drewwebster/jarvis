@@ -19,18 +19,15 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package `in`.arunkumarsampath.jarvis
+package `in`.arunkumarsampath.jarvis.di.activity
 
-import android.app.Application
-import timber.log.Timber
+import `in`.arunkumarsampath.jarvis.di.fragment.FragmentComponent
+import `in`.arunkumarsampath.jarvis.di.fragment.FragmentModule
+import `in`.arunkumarsampath.jarvis.di.scopes.PerActivity
+import dagger.Subcomponent
 
-/**
- * Created by arunk on 06-03-2018.
- */
-class Jarvis : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-        Timber.plant(Timber.DebugTree())
-    }
+@PerActivity
+@Subcomponent(modules = [(ActivityModule::class)])
+interface ActivityComponent {
+    fun newFragmentComponent(fragmentModule: FragmentModule): FragmentComponent
 }

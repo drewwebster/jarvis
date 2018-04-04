@@ -19,18 +19,11 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package `in`.arunkumarsampath.jarvis
+package `in`.arunkumarsampath.jarvis.di.service
 
-import android.app.Application
-import timber.log.Timber
+import android.app.Service
 
-/**
- * Created by arunk on 06-03-2018.
- */
-class Jarvis : Application() {
+import dagger.Module
 
-    override fun onCreate() {
-        super.onCreate()
-        Timber.plant(Timber.DebugTree())
-    }
-}
+@Module
+class ServiceModule(private val service: Service)

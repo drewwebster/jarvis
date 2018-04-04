@@ -19,18 +19,25 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package `in`.arunkumarsampath.jarvis
+package in.arunkumarsampath.jarvis.di.app;
 
-import android.app.Application
-import timber.log.Timber
+import android.support.annotation.NonNull;
 
-/**
- * Created by arunk on 06-03-2018.
- */
-class Jarvis : Application() {
+import javax.inject.Singleton;
 
-    override fun onCreate() {
-        super.onCreate()
-        Timber.plant(Timber.DebugTree())
-    }
+import dagger.Component;
+import in.arunkumarsampath.jarvis.di.activity.ActivityComponent;
+import in.arunkumarsampath.jarvis.di.activity.ActivityModule;
+import in.arunkumarsampath.jarvis.di.service.ServiceComponent;
+import in.arunkumarsampath.jarvis.di.service.ServiceModule;
+
+@Singleton
+@Component(modules = {
+        AppModule.class,
+})
+public interface AppComponent {
+    @NonNull
+    ActivityComponent newActivityComponent(@NonNull ActivityModule activityModule);
+
+    ServiceComponent newServiceComponent(ServiceModule serviceModule);
 }

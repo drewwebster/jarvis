@@ -19,18 +19,12 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package `in`.arunkumarsampath.jarvis
+package `in`.arunkumarsampath.jarvis.di.viewmodel
 
-import android.app.Application
-import timber.log.Timber
+import dagger.Module
 
-/**
- * Created by arunk on 06-03-2018.
- */
-class Jarvis : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-        Timber.plant(Timber.DebugTree())
-    }
+@Module
+abstract class ViewModelModule {
+    /* @Binds
+     internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory*/
 }

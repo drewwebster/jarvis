@@ -19,18 +19,14 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package `in`.arunkumarsampath.jarvis
+package `in`.arunkumarsampath.jarvis.di.viewmodel
 
-import android.app.Application
-import timber.log.Timber
+import android.arch.lifecycle.ViewModel
+import dagger.MapKey
+import kotlin.reflect.KClass
 
-/**
- * Created by arunk on 06-03-2018.
- */
-class Jarvis : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-        Timber.plant(Timber.DebugTree())
-    }
-}
+@MustBeDocumented
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+@MapKey
+internal annotation class ViewModelKey(val value: KClass<out ViewModel>)

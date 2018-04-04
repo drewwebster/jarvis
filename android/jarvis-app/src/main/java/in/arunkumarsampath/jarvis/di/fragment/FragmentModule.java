@@ -19,18 +19,19 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package `in`.arunkumarsampath.jarvis
+package in.arunkumarsampath.jarvis.di.fragment;
 
-import android.app.Application
-import timber.log.Timber
+import android.support.v4.app.Fragment;
 
-/**
- * Created by arunk on 06-03-2018.
- */
-class Jarvis : Application() {
+import dagger.Module;
 
-    override fun onCreate() {
-        super.onCreate()
-        Timber.plant(Timber.DebugTree())
+@Module
+public class FragmentModule {
+
+    private final Fragment fragment;
+
+    public FragmentModule(Fragment fragment) {
+        this.fragment = fragment;
     }
+
 }

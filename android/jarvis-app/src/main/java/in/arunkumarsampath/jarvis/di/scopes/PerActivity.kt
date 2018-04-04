@@ -19,18 +19,15 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package `in`.arunkumarsampath.jarvis
+package `in`.arunkumarsampath.jarvis.di.scopes
 
-import android.app.Application
-import timber.log.Timber
+import javax.inject.Scope
 
 /**
- * Created by arunk on 06-03-2018.
+ * A scoping annotation to permit objects whose lifetime should
+ * conform to the life of the Activity to be memorised in the
+ * correct component.
  */
-class Jarvis : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-        Timber.plant(Timber.DebugTree())
-    }
-}
+@Scope
+@Retention(AnnotationRetention.RUNTIME)
+annotation class PerActivity

@@ -19,18 +19,25 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package `in`.arunkumarsampath.jarvis
+package in.arunkumarsampath.jarvis.di.activity;
 
-import android.app.Application
-import timber.log.Timber
+import android.app.Activity;
 
-/**
- * Created by arunk on 06-03-2018.
- */
-class Jarvis : Application() {
+import dagger.Module;
+import dagger.Provides;
 
-    override fun onCreate() {
-        super.onCreate()
-        Timber.plant(Timber.DebugTree())
+@Module
+public class ActivityModule {
+
+    @SuppressWarnings("CanBeFinal")
+    private Activity activity;
+
+    public ActivityModule(Activity activity) {
+        this.activity = activity;
+    }
+
+    @Provides
+    Activity activity() {
+        return activity;
     }
 }
