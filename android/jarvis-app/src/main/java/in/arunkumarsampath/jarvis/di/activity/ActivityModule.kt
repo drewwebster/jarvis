@@ -19,25 +19,30 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package in.arunkumarsampath.jarvis.di.activity;
+package `in`.arunkumarsampath.jarvis.di.activity
 
-import android.app.Activity;
-
-import dagger.Module;
-import dagger.Provides;
+import `in`.arunkumarsampath.jarvis.R
+import android.app.Activity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import dagger.Module
+import dagger.Provides
 
 @Module
-public class ActivityModule {
+class ActivityModule(private val activity: Activity) {
 
-    @SuppressWarnings("CanBeFinal")
-    private Activity activity;
-
-    public ActivityModule(Activity activity) {
-        this.activity = activity;
+    @Provides
+    internal fun activity(): Activity {
+        return activity
     }
 
     @Provides
-    Activity activity() {
-        return activity;
+    internal fun googleSignInClient(): GoogleSignInClient {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(activity.getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+        return GoogleSignIn.getClient(activity, gso)
     }
 }

@@ -19,29 +19,26 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package in.arunkumarsampath.jarvis.di.app;
+package `in`.arunkumarsampath.jarvis.di.app
 
-import android.app.Application;
+import `in`.arunkumarsampath.jarvis.di.viewmodel.ViewModelModule
+import android.app.Application
+import com.google.firebase.auth.FirebaseAuth
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
-import in.arunkumarsampath.jarvis.di.viewmodel.ViewModelModule;
-
-@Module(includes = ViewModelModule.class)
-public class AppModule {
-
-    @SuppressWarnings("CanBeFinal")
-    Application application;
-
-    public AppModule(Application application) {
-        this.application = application;
-    }
+@Module(includes = [ViewModelModule::class])
+class AppModule(internal var application: Application) {
 
     @Provides
     @Singleton
-    Application providesApplication() {
-        return application;
+    internal fun providesApplication(): Application {
+        return application
+    }
+
+    @Provides
+    internal fun firebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
     }
 }
