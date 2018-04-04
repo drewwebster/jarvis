@@ -22,6 +22,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="in.arunkumarsampath.jarvis">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".Jarvis"
         android:allowBackup="false"

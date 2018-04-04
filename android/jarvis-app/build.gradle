@@ -24,8 +24,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+def FIREBASE_ADMIN_KEY = "FIREBASE_ADMIN_KEY"
+def properties = new Properties()
+properties.load(new FileInputStream("$rootDir/values.properties"))
+def firebaseAdminKey = properties.getProperty(FIREBASE_ADMIN_KEY, "\"\"")
+
 android {
     compileSdkVersion 27
+
     defaultConfig {
         applicationId "in.arunkumarsampath.jarvis"
         minSdkVersion 24
@@ -33,7 +39,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        resValue "string", "firebaseAdminKey", "$firebaseAdminKey"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -56,6 +65,9 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.6.1'
 
     implementation 'com.google.firebase:firebase-database:12.0.1'
+    implementation 'com.google.firebase:firebase-auth:12.0.1'
+    implementation 'com.google.android.gms:play-services-auth:12.0.1'
+    implementation 'com.github.frangsierra:rx2firebase:1.4.0'
 
     // Dependency Injection
     implementation 'com.google.dagger:dagger:2.15'
@@ -63,7 +75,7 @@ dependencies {
     kaptTest 'com.google.dagger:dagger-compiler:2.15'
 
     // Butterknife, Timber
-    implementation 'com.jakewharton.timber:timber:4.6.0'
+    implementation 'com.jakewharton.timber:timber:4.6.1'
     implementation 'com.jakewharton:butterknife:8.8.1'
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
 
