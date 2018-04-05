@@ -21,14 +21,15 @@
 
 package com.arunkumarsampath.jarvis.home
 
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import com.arunkumarsampath.jarvis.R
 import com.arunkumarsampath.jarvis.common.base.BaseActivity
-import com.arunkumarsampath.jarvis.data.chat.ConversationItem
 import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
+import com.arunkumarsampath.jarvis.di.viewmodel.ViewModelFactory
+import com.arunkumarsampath.jarvis.extensions.watch
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -43,7 +44,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class MainActivity : BaseActivity() {
+class HomeActivity : BaseActivity() {
     override val layoutRes = R.layout.activity_main
 
     override fun inject(activityComponent: ActivityComponent) = activityComponent.inject(this)
@@ -52,12 +53,18 @@ class MainActivity : BaseActivity() {
     lateinit var googleSignInClient: GoogleSignInClient
     @Inject
     lateinit var auth: FirebaseAuth
+    @Inject
+    lateinit var factory: ViewModelFactory
+
+    private val homeViewModel: HomeViewModel by lazy { ViewModelProviders.of(this, factory).get(HomeViewModel::class.java) }
+
+    private val conversationController = ConversationController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
-
         setupChatUi()
+        observeViewModel()
     }
 
     override fun onStart() {
@@ -83,12 +90,18 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    private fun observeViewModel() {
+        homeViewModel.conversationItemsLiveData.watch(this) { conversations ->
+            conversationController.setData(conversations, false)
+            chatRecyclerView.post { chatRecyclerView.smoothScrollToPosition(conversations!!.size - 1) }
+        }
+    }
+
+
     private fun setupChatUi() {
-        val controller = ConversationController()
-        controller.setData(ConversationItem.generateMockItems(), false)
         chatRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, true)
-            setController(controller)
+            layoutManager = LinearLayoutManager(this@HomeActivity).apply { stackFromEnd = true }
+            setController(conversationController)
         }
     }
 

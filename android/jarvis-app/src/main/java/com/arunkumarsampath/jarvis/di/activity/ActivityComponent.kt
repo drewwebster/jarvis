@@ -24,7 +24,7 @@ package com.arunkumarsampath.jarvis.di.activity
 import com.arunkumarsampath.jarvis.di.fragment.FragmentComponent
 import com.arunkumarsampath.jarvis.di.fragment.FragmentModule
 import com.arunkumarsampath.jarvis.di.scopes.PerActivity
-import com.arunkumarsampath.jarvis.home.MainActivity
+import com.arunkumarsampath.jarvis.home.HomeActivity
 import dagger.Subcomponent
 
 @PerActivity
@@ -32,5 +32,5 @@ import dagger.Subcomponent
 interface ActivityComponent {
     fun newFragmentComponent(fragmentModule: FragmentModule): FragmentComponent
 
-    fun inject(mainActivity: MainActivity)
+    fun inject(homeActivity: HomeActivity)
 }

@@ -9,7 +9,7 @@ import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.arunkumarsampath.jarvis.R
 import com.arunkumarsampath.jarvis.util.epoxy.BaseEpoxyHolder
 
-@EpoxyModelClass(layout = R.layout.layout_conversation_item)
+@EpoxyModelClass(layout = R.layout.layout_conversation_item_jarvis)
 internal abstract class ConversationModel : EpoxyModelWithHolder<ConversationModel.Holder>() {
     @EpoxyAttribute
     lateinit var message: String

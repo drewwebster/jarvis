@@ -21,10 +21,22 @@
 
 package com.arunkumarsampath.jarvis.di.viewmodel
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
+import com.arunkumarsampath.jarvis.home.HomeViewModel
+import dagger.Binds
 import dagger.Module
+import dagger.multibindings.IntoMap
 
 @Module
 abstract class ViewModelModule {
-    /* @Binds
-     internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory*/
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(HomeViewModel::class)
+    internal abstract fun homeViewModel(homeViewModel: HomeViewModel): ViewModel
+
+    @Binds
+    internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
+
 }

@@ -21,8 +21,8 @@
 
 package com.arunkumarsampath.jarvis.di.app
 
-import com.arunkumarsampath.jarvis.di.viewmodel.ViewModelModule
 import android.app.Application
+import com.arunkumarsampath.jarvis.di.viewmodel.ViewModelModule
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
