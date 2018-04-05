@@ -18,11 +18,12 @@
   ~ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   ~ DEALINGS IN THE SOFTWARE.
   -->
-
-<resources>
-    <color name="colorPrimary">#2E3E4E</color>
-    <color name="colorPrimaryDark">#1B2936</color>
-    <color name="colorAccent">#4DD0E1</color>
-    <color name="colorAccentDark">#00BCD4</color>
-    <color name="colorAccentComplementary">#FF6E00</color>
-</resources>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/colorAccentDark" />
+    <corners android:radius="56dp" />
+    <padding
+        android:bottom="4dp"
+        android:left="12dp"
+        android:right="12dp"
+        android:top="4dp" />
+</shape>

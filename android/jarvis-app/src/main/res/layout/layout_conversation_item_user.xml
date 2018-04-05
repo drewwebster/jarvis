@@ -19,10 +19,19 @@
   ~ DEALINGS IN THE SOFTWARE.
   -->
 
-<resources>
-    <color name="colorPrimary">#2E3E4E</color>
-    <color name="colorPrimaryDark">#1B2936</color>
-    <color name="colorAccent">#4DD0E1</color>
-    <color name="colorAccentDark">#00BCD4</color>
-    <color name="colorAccentComplementary">#FF6E00</color>
-</resources>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="end"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/conversationText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_rectangle_accent_dark"
+        android:padding="8dp"
+        tools:text="Hi, how are you?" />
+</LinearLayout>
