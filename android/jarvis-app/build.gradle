@@ -29,7 +29,9 @@ def properties = new Properties()
 properties.load(new FileInputStream("$rootDir/values.properties"))
 def firebaseAdminKey = properties.getProperty(FIREBASE_ADMIN_KEY, "\"\"")
 
-
+kapt {
+    correctErrorTypes = true
+}
 androidExtensions {
     experimental = true
 }
@@ -70,10 +72,14 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.6.1'
 
     implementation 'com.google.firebase:firebase-database:12.0.1'
-    implementation 'com.firebaseui:firebase-ui-database:2.1.0'
     implementation 'com.google.firebase:firebase-auth:12.0.1'
     implementation 'com.google.android.gms:play-services-auth:12.0.1'
     implementation 'com.github.frangsierra:rx2firebase:1.4.0'
+
+    // Epoxy
+    implementation 'com.airbnb.android:epoxy:2.10.0'
+    kapt 'com.airbnb.android:epoxy-processor:2.10.0'
+    implementation 'com.airbnb.android:epoxy-paging:2.10.0'
 
     // Permissions
     implementation 'com.petarmarijanovic:rx-activity-result:2.1.0'
