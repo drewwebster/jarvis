@@ -20,7 +20,7 @@ constructor(
     override fun conversations(): PagedList<ConversationItem> {
         val config = with(PagedList.Config.Builder()) {
             setEnablePlaceholders(false)
-            setInitialLoadSizeHint(10)
+            setInitialLoadSizeHint(20)
             setPageSize(10)
             setPrefetchDistance(5)
             build()

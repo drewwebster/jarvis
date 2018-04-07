@@ -21,6 +21,7 @@
 
 package com.arunkumarsampath.jarvis.data.conversation
 
+import android.support.v7.util.DiffUtil
 import java.util.*
 
 
@@ -47,6 +48,18 @@ data class ConversationItem(
             }
             return chatItems
         }
-    }
 
+        class ConversationDiffCallback : DiffUtil.ItemCallback<ConversationItem>() {
+
+            override fun areItemsTheSame(
+                    oldItem: ConversationItem?,
+                    newItem: ConversationItem?
+            ): Boolean = oldItem?.key == newItem?.key
+
+            override fun areContentsTheSame(
+                    oldItem: ConversationItem?,
+                    newItem: ConversationItem?
+            ): Boolean = oldItem?.equals(newItem)!!
+        }
+    }
 }

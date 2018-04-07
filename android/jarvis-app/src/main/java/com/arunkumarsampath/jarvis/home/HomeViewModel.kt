@@ -8,10 +8,14 @@ import com.arunkumarsampath.jarvis.data.conversation.ConversationRepository
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor(val conversationRepository: ConversationRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(conversationRepository: ConversationRepository) : ViewModel() {
     private val subs = CompositeDisposable()
 
     val conversationItemsLiveData = MutableLiveData<PagedList<ConversationItem>>()
+
+    init {
+        conversationItemsLiveData.postValue(conversationRepository.conversations())
+    }
 
     override fun onCleared() {
         subs.clear()
