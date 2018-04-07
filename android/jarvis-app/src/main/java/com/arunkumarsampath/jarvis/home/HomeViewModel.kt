@@ -5,16 +5,23 @@ import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import com.arunkumarsampath.jarvis.data.conversation.ConversationItem
 import com.arunkumarsampath.jarvis.data.conversation.ConversationRepository
+import com.arunkumarsampath.jarvis.util.executor.UI
+import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor(conversationRepository: ConversationRepository) : ViewModel() {
+class HomeViewModel
+@Inject
+constructor(
+        conversationRepository: ConversationRepository,
+        @param:UI private val scheduler: Scheduler
+) : ViewModel() {
     private val subs = CompositeDisposable()
 
     val conversationItemsLiveData = MutableLiveData<PagedList<ConversationItem>>()
 
     init {
-        conversationItemsLiveData.postValue(conversationRepository.conversations())
+        subs.add(conversationRepository.conversations().subscribe(conversationItemsLiveData::postValue))
     }
 
     override fun onCleared() {

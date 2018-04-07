@@ -26,14 +26,14 @@ import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
 import com.arunkumarsampath.jarvis.di.activity.ActivityModule
 import com.arunkumarsampath.jarvis.di.service.ServiceComponent
 import com.arunkumarsampath.jarvis.di.service.ServiceModule
-import com.arunkumarsampath.jarvis.util.executor.ExecutorModule
+import com.arunkumarsampath.jarvis.util.executor.SchedulerModule
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [
     AppModule::class,
-    ExecutorModule::class,
+    SchedulerModule::class,
     DataModule::class
 ])
 interface AppComponent {

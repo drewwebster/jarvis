@@ -70,9 +70,6 @@ class FirebasePositionalDataSource<T>(
     abstract inner class InvalidateAwareListener : ValueEventListener {
         val version = AtomicInteger(0)
 
-        override fun onCancelled(databaseError: DatabaseError) {
-        }
-
         @CallSuper
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             if (version.incrementAndGet() > 1) {
