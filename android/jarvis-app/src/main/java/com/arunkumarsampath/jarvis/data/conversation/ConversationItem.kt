@@ -19,7 +19,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package com.arunkumarsampath.jarvis.data.chat
+package com.arunkumarsampath.jarvis.data.conversation
 
 import java.util.*
 

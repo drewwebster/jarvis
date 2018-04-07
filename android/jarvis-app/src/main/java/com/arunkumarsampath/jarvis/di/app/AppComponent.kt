@@ -19,25 +19,25 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package com.arunkumarsampath.jarvis.di.app;
+package com.arunkumarsampath.jarvis.di.app
 
-import android.support.annotation.NonNull;
-
-import javax.inject.Singleton;
-
-import dagger.Component;
-import com.arunkumarsampath.jarvis.di.activity.ActivityComponent;
-import com.arunkumarsampath.jarvis.di.activity.ActivityModule;
-import com.arunkumarsampath.jarvis.di.service.ServiceComponent;
-import com.arunkumarsampath.jarvis.di.service.ServiceModule;
+import com.arunkumarsampath.jarvis.data.DataModule
+import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
+import com.arunkumarsampath.jarvis.di.activity.ActivityModule
+import com.arunkumarsampath.jarvis.di.service.ServiceComponent
+import com.arunkumarsampath.jarvis.di.service.ServiceModule
+import com.arunkumarsampath.jarvis.util.executor.ExecutorModule
+import dagger.Component
+import javax.inject.Singleton
 
 @Singleton
-@Component(modules = {
-        AppModule.class,
-})
-public interface AppComponent {
-    @NonNull
-    ActivityComponent newActivityComponent(@NonNull ActivityModule activityModule);
+@Component(modules = [
+    AppModule::class,
+    ExecutorModule::class,
+    DataModule::class
+])
+interface AppComponent {
+    fun newActivityComponent(activityModule: ActivityModule): ActivityComponent
 
-    ServiceComponent newServiceComponent(ServiceModule serviceModule);
+    fun newServiceComponent(serviceModule: ServiceModule): ServiceComponent
 }
