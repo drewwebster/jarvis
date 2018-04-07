@@ -13,6 +13,13 @@ import javax.inject.Singleton
 
 @Module
 class DataModule {
+
+    @Provides
+    fun providesFb(): FirebaseDatabase {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        return FirebaseDatabase.getInstance()
+    }
+
     @Provides
     @Singleton
     fun conversationRepository(firebaseConversationRepository: FirebaseConversationRepository): ConversationRepository {
@@ -21,10 +28,10 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun pagedFirebaseDatasourceFactory(): PagedFirebaseDatasourceFactory<ConversationItem> {
+    fun pagedFirebaseDatasourceFactory(firebaseDb: FirebaseDatabase): PagedFirebaseDatasourceFactory<ConversationItem> {
         return PagedFirebaseDatasourceFactory(
                 conversationItemParser,
-                FirebaseDatabase.getInstance().getReference(CONVERSATION_PATH)
+                firebaseDb.getReference(CONVERSATION_PATH)
         )
     }
 
