@@ -21,10 +21,10 @@
 
 package com.arunkumarsampath.jarvis
 
+import android.app.Application
 import com.arunkumarsampath.jarvis.di.app.AppComponent
 import com.arunkumarsampath.jarvis.di.app.AppModule
 import com.arunkumarsampath.jarvis.di.app.DaggerAppComponent
-import android.app.Application
 import timber.log.Timber
 
 /**

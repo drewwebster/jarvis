@@ -30,6 +30,7 @@ import com.arunkumarsampath.jarvis.common.base.BaseActivity
 import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
 import com.arunkumarsampath.jarvis.di.viewmodel.ViewModelFactory
 import com.arunkumarsampath.jarvis.extensions.watch
+import com.arunkumarsampath.jarvis.home.conversation.ConversationAdapter
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -56,9 +57,9 @@ class HomeActivity : BaseActivity() {
     @Inject
     lateinit var factory: ViewModelFactory
 
-    private val homeViewModel: HomeViewModel by lazy { ViewModelProviders.of(this, factory).get(HomeViewModel::class.java) }
+    private val conversationAdapter = ConversationAdapter()
 
-    private val conversationController = ConversationController()
+    private val homeViewModel: HomeViewModel by lazy { ViewModelProviders.of(this, factory).get(HomeViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,17 +92,14 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun observeViewModel() {
-        homeViewModel.conversationItemsLiveData.watch(this) { conversations ->
-            conversationController.setData(conversations, false)
-            chatRecyclerView.post { chatRecyclerView.smoothScrollToPosition(conversations!!.size - 1) }
-        }
+        homeViewModel.conversationItemsLiveData.watch(this, conversationAdapter::submitList)
     }
 
 
     private fun setupChatUi() {
         chatRecyclerView.apply {
+            adapter = conversationAdapter
             layoutManager = LinearLayoutManager(this@HomeActivity).apply { stackFromEnd = true }
-            setController(conversationController)
         }
     }
 
