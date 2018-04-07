@@ -77,11 +77,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:12.0.1'
     implementation 'com.github.frangsierra:rx2firebase:1.4.0'
 
-    // Epoxy
-    implementation 'com.airbnb.android:epoxy:2.10.0'
-    kapt 'com.airbnb.android:epoxy-processor:2.10.0'
-    implementation 'com.airbnb.android:epoxy-paging:2.10.0'
+    // RecyclerView Adapter
+    implementation 'com.hannesdorfmann:adapterdelegates3:3.0.1'
     implementation "android.arch.paging:runtime:1.0.0-beta1"
+    implementation "android.arch.paging:rxjava2:1.0.0-alpha1"
 
     // Permissions
     implementation 'com.petarmarijanovic:rx-activity-result:2.1.0'

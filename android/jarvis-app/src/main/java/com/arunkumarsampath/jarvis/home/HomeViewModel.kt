@@ -56,6 +56,6 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
 
     override fun onCleared() {
-
+        subs.clear()
     }
 }

@@ -58,8 +58,6 @@ class HomeActivity : BaseActivity() {
 
     private val homeViewModel: HomeViewModel by lazy { ViewModelProviders.of(this, factory).get(HomeViewModel::class.java) }
 
-    private val conversationController = ConversationController()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
@@ -92,7 +90,6 @@ class HomeActivity : BaseActivity() {
 
     private fun observeViewModel() {
         homeViewModel.conversationItemsLiveData.watch(this) { conversations ->
-            conversationController.setData(conversations, false)
             chatRecyclerView.post { chatRecyclerView.smoothScrollToPosition(conversations!!.size - 1) }
         }
     }
@@ -101,7 +98,6 @@ class HomeActivity : BaseActivity() {
     private fun setupChatUi() {
         chatRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity).apply { stackFromEnd = true }
-            setController(conversationController)
         }
     }
 
