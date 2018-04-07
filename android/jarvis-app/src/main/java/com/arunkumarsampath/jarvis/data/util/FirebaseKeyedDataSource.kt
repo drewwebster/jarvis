@@ -8,7 +8,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import java.util.concurrent.atomic.AtomicInteger
 
-class FirebasePositionalDataSource<T>(
+class FirebaseKeyedDataSource<T>(
         private val snapshotParser: SnapshotParser<T>,
         private val databaseReference: DatabaseReference
 ) : PageKeyedDataSource<String, T>() {

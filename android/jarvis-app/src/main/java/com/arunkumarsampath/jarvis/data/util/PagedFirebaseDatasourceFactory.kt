@@ -9,6 +9,6 @@ class PagedFirebaseDatasourceFactory<T>(
 ) : DataSource.Factory<String, T>() {
 
     override fun create(): DataSource<String, T> {
-        return FirebasePositionalDataSource(snapshotParser, databaseReference)
+        return FirebaseKeyedDataSource(snapshotParser, databaseReference)
     }
 }
