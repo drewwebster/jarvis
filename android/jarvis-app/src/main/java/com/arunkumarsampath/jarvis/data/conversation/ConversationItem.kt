@@ -29,7 +29,8 @@ data class ConversationItem(
         var key: String = "",
         var who: String = "",
         var content: String = "",
-        var timestamp: Long = 0L
+        var timestamp: Long = 0L,
+        var reverse_timestamp: Long = 0L
 ) : KeyProvider {
 
     override fun key() = key
@@ -37,6 +38,7 @@ data class ConversationItem(
     companion object {
         const val JARVIS = "jarvis"
         const val USER = "user"
+        const val REVERSE_TIMESTAMP = "reverse_timestamp"
 
         fun generateMockItems(howMuch: Int = 100): List<ConversationItem> {
             val chatItems = ArrayList<ConversationItem>()
