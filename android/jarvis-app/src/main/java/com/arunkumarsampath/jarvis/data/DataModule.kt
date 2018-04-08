@@ -16,8 +16,7 @@ class DataModule {
 
     @Provides
     fun providesFb(): FirebaseDatabase {
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
-        return FirebaseDatabase.getInstance()
+        return FirebaseDatabase.getInstance().apply { setPersistenceEnabled(true) }
     }
 
     @Provides
