@@ -25,7 +25,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import com.arunkumarsampath.jarvis.R
 import com.arunkumarsampath.jarvis.common.base.BaseActivity
 import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
@@ -102,13 +101,6 @@ class HomeActivity : BaseActivity() {
             layoutManager = LinearLayoutManager(this@HomeActivity).apply { stackFromEnd = true }
             adapter = conversationAdapter
         }
-        chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val lastVisibleItem = (chatRecyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-                //    conversationAdapter.currentList?.loadAround(lastVisibleItem)
-            }
-        })
     }
 
     private fun fireBaseAuthWithGoogle(acct: GoogleSignInAccount) {
