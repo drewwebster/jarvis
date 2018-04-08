@@ -16,24 +16,19 @@ class FirebaseKeyedDataSource<T : KeyProvider>(
 
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<T>) {
         val loadSize = params.requestedLoadSize
-        try {
-            databaseReference
-                    .orderByKey()
-                    .limitToFirst(loadSize).apply {
-                        addValueEventListener(object : InvalidateAwareListener(this) {
-                            override fun onCancelled(databaseError: DatabaseError) {
-                                callback.onResult(ArrayList())
-                            }
+        databaseReference
+                .orderByKey()
+                .limitToFirst(loadSize).apply {
+                    addValueEventListener(object : InvalidateAwareListener(this) {
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            callback.onResult(ArrayList())
+                        }
 
-                            override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                                val (items, _) = parseChildren(dataSnapshot)
-                                callback.onResult(items)
-                            }
-                        })
-                    }
-        } catch (e: Exception) {
-            Timber.e(e)
-        }
+                        override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                            callback.onResult(parseChildren(dataSnapshot))
+                        }
+                    })
+                }
     }
 
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<T>) {
@@ -55,25 +50,18 @@ class FirebaseKeyedDataSource<T : KeyProvider>(
                         }
 
                         override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                            val (items, currentKey) = parseChildren(dataSnapshot)
+                            val items = parseChildren(dataSnapshot)
                             callback.onResult(items.subList(1, items.size))
                         }
                     })
                 }
     }
 
-    private fun parseChildren(dataSnapshot: DataSnapshot): Pair<List<T>, String> {
-        val children = dataSnapshot.children
-        var lastKey = ""
-        val items: ArrayList<T> = ArrayList()
-        for (snapshot in children) {
-            items.add(snapshotParser.parse(snapshot))
-            lastKey = snapshot.key
-        }
-        return Pair(items as List<T>, lastKey)
+    private fun parseChildren(dataSnapshot: DataSnapshot): List<T> {
+        return dataSnapshot.children.map(snapshotParser::parse)
     }
 
-    abstract inner class InvalidateAwareListener(val query: Query) : ValueEventListener {
+    abstract inner class InvalidateAwareListener(private val query: Query) : ValueEventListener {
         val version = AtomicInteger(0)
 
         @CallSuper
