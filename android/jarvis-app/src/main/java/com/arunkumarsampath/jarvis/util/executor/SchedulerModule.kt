@@ -10,9 +10,13 @@ import io.reactivex.schedulers.Schedulers
 class SchedulerModule {
     @Provides
     @IO
-    fun ioExecutor(): Scheduler = Schedulers.io()
+    fun io(): Scheduler = Schedulers.io()
 
     @Provides
     @UI
-    fun uiExecutor(): Scheduler = AndroidSchedulers.mainThread()
+    fun ui(): Scheduler = AndroidSchedulers.mainThread()
+
+    @Provides
+    @POOL
+    fun pool(): Scheduler = Schedulers.computation()
 }

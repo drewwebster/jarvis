@@ -21,11 +21,12 @@
 
 package com.arunkumarsampath.jarvis.di.app
 
-import com.arunkumarsampath.jarvis.data.DataModule
+import com.arunkumarsampath.jarvis.device.JoinApiModule
 import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
 import com.arunkumarsampath.jarvis.di.activity.ActivityModule
 import com.arunkumarsampath.jarvis.di.service.ServiceComponent
 import com.arunkumarsampath.jarvis.di.service.ServiceModule
+import com.arunkumarsampath.jarvis.home.conversation.data.ConversationModule
 import com.arunkumarsampath.jarvis.util.executor.SchedulerModule
 import dagger.Component
 import javax.inject.Singleton
@@ -34,7 +35,8 @@ import javax.inject.Singleton
 @Component(modules = [
     AppModule::class,
     SchedulerModule::class,
-    DataModule::class
+    JoinApiModule::class,
+    ConversationModule::class
 ])
 interface AppComponent {
     fun newActivityComponent(activityModule: ActivityModule): ActivityComponent

@@ -1,7 +1,7 @@
-package com.arunkumarsampath.jarvis.data.util
+package com.arunkumarsampath.jarvis.util.firebase
 
 import android.arch.paging.DataSource
-import com.arunkumarsampath.jarvis.data.conversation.KeyProvider
+import com.arunkumarsampath.jarvis.util.common.firebase.KeyProvider
 import com.google.firebase.database.DatabaseReference
 
 class PagedFirebaseDatasourceFactory<T : KeyProvider>(

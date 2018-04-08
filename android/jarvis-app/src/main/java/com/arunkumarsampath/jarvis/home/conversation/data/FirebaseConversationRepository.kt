@@ -1,9 +1,10 @@
-package com.arunkumarsampath.jarvis.data.conversation
+package com.arunkumarsampath.jarvis.home.conversation.data
 
 import android.arch.paging.PagedList
 import android.arch.paging.RxPagedListBuilder
-import com.arunkumarsampath.jarvis.data.util.PagedFirebaseDatasourceFactory
-import com.arunkumarsampath.jarvis.data.util.SnapshotParser
+import com.arunkumarsampath.jarvis.util.firebase.PagedFirebaseDatasourceFactory
+import com.arunkumarsampath.jarvis.util.firebase.SnapshotParser
+import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
 import com.arunkumarsampath.jarvis.util.executor.IO
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

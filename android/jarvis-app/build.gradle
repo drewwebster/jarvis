@@ -25,9 +25,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 def FIREBASE_ADMIN_KEY = "FIREBASE_ADMIN_KEY"
+def PICHROME_DEVICE_ID = "PICHROME_DEVICE_ID"
+def JOIN_API_KEY = "JOIN_API_KEY"
 def properties = new Properties()
 properties.load(new FileInputStream("$rootDir/values.properties"))
 def firebaseAdminKey = properties.getProperty(FIREBASE_ADMIN_KEY, "\"\"")
+def piChromeId = properties.getProperty(PICHROME_DEVICE_ID, "\"\"")
+def joinApiKey = properties.getProperty(JOIN_API_KEY, "\"\"")
 
 kapt {
     correctErrorTypes = true
@@ -48,6 +52,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         resValue "string", "firebaseAdminKey", "$firebaseAdminKey"
+        buildConfigField("String", PICHROME_DEVICE_ID, "\"${piChromeId}\"")
+        buildConfigField("String", JOIN_API_KEY, "\"${joinApiKey}\"")
     }
 
     buildTypes {
@@ -65,6 +71,8 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
 
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
     implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'

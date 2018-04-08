@@ -19,7 +19,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package com.arunkumarsampath.jarvis.common.base
+package com.arunkumarsampath.jarvis.util.common.base
 
 import com.arunkumarsampath.jarvis.Jarvis
 import com.arunkumarsampath.jarvis.di.activity.ActivityComponent

@@ -1,4 +1,4 @@
-package com.arunkumarsampath.jarvis.data.util
+package com.arunkumarsampath.jarvis.util.firebase
 
 import com.google.firebase.database.DataSnapshot
 

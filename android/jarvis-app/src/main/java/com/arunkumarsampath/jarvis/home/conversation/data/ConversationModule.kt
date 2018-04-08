@@ -1,11 +1,8 @@
-package com.arunkumarsampath.jarvis.data
+package com.arunkumarsampath.jarvis.home.conversation.data
 
-import com.arunkumarsampath.jarvis.data.conversation.ConversationItem
-import com.arunkumarsampath.jarvis.data.conversation.ConversationRepository
-import com.arunkumarsampath.jarvis.data.conversation.Conversations
-import com.arunkumarsampath.jarvis.data.conversation.FirebaseConversationRepository
-import com.arunkumarsampath.jarvis.data.util.PagedFirebaseDatasourceFactory
-import com.arunkumarsampath.jarvis.data.util.SnapshotParser
+import com.arunkumarsampath.jarvis.util.firebase.PagedFirebaseDatasourceFactory
+import com.arunkumarsampath.jarvis.util.firebase.SnapshotParser
+import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -14,7 +11,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class DataModule {
+class ConversationModule {
 
     @Provides
     fun providesFb(): FirebaseDatabase {

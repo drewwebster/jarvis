@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.arunkumarsampath.jarvis.R
-import com.arunkumarsampath.jarvis.data.conversation.ConversationItem
 import com.arunkumarsampath.jarvis.extensions.inflate
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.extensions.LayoutContainer

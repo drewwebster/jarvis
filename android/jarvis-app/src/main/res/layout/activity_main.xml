@@ -68,13 +68,23 @@
             android:hint="@string/say_something"
             android:inputType="text" />
 
+        <ImageView
+            android:id="@+id/messageSend"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_send"
+            android:tint="@color/colorPrimaryLight" />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_mic_black_24dp"
-            android:tint="@color/colorPrimary" />
+            android:src="@drawable/ic_mic_black_24dp" />
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

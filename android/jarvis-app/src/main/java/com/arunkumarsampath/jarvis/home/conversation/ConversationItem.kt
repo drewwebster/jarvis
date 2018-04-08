@@ -19,9 +19,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package com.arunkumarsampath.jarvis.data.conversation
+package com.arunkumarsampath.jarvis.home.conversation
 
 import android.support.v7.util.DiffUtil
+import com.arunkumarsampath.jarvis.util.common.firebase.KeyProvider
 import java.util.*
 
 
@@ -46,7 +47,7 @@ data class ConversationItem(
             for (i in 1..howMuch) {
                 chatItems.add(ConversationItem(
                         random.nextInt().toString(),
-                        if (random.nextBoolean()) ConversationItem.JARVIS else ConversationItem.USER,
+                        if (random.nextBoolean()) JARVIS else USER,
                         random.nextInt().toString(),
                         random.nextLong()
                 ))

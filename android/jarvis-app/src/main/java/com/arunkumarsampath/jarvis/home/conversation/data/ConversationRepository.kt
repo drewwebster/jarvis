@@ -1,6 +1,7 @@
-package com.arunkumarsampath.jarvis.data.conversation
+package com.arunkumarsampath.jarvis.home.conversation.data
 
 import android.arch.paging.PagedList
+import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
 import io.reactivex.Flowable
 
 interface ConversationRepository {

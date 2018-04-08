@@ -21,10 +21,12 @@
 
 package com.arunkumarsampath.jarvis.extensions
 
+import android.app.Activity
 import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
@@ -40,4 +42,9 @@ fun View.hide() {
 
 fun View.gone() {
     this.visibility = View.GONE
+}
+
+fun View.hideKeyboard() {
+    (context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(windowToken, 0)
 }

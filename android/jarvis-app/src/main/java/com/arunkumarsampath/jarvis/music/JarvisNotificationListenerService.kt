@@ -19,7 +19,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package com.arunkumarsampath.jarvis.applemusic
+package com.arunkumarsampath.jarvis.music
 
 import android.content.Intent
 import android.os.IBinder

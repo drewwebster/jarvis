@@ -43,7 +43,7 @@
         </activity>
 
         <service
-            android:name="com.arunkumarsampath.jarvis.applemusic.JarvisNotificationListenerService"
+            android:name="com.arunkumarsampath.jarvis.music.JarvisNotificationListenerService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">

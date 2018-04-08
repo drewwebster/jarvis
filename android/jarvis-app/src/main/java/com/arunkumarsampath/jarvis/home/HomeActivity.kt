@@ -26,27 +26,30 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.transition.TransitionManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.transition.TransitionManager
 import android.view.View
 import com.arunkumarsampath.jarvis.R
-import com.arunkumarsampath.jarvis.common.base.BaseActivity
 import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
 import com.arunkumarsampath.jarvis.di.viewmodel.ViewModelFactory
-import com.arunkumarsampath.jarvis.extensions.gone
+import com.arunkumarsampath.jarvis.extensions.hide
+import com.arunkumarsampath.jarvis.extensions.hideKeyboard
 import com.arunkumarsampath.jarvis.extensions.show
 import com.arunkumarsampath.jarvis.extensions.watch
 import com.arunkumarsampath.jarvis.home.conversation.ConversationAdapter
+import com.arunkumarsampath.jarvis.util.common.base.BaseActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.jakewharton.rxbinding2.view.RxView
 import com.tbruyelle.rxpermissions2.RxPermissions
 import durdinapps.rxfirebase2.RxFirebaseAuth
+import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -153,16 +156,30 @@ class HomeActivity : BaseActivity() {
                         if (messageEditText.visibility != View.VISIBLE) {
                             TransitionManager.beginDelayedTransition(bottomCard)
                             messageEditText.show()
+                            messageSend.show()
                         }
                     } else {
-                        if (messageEditText.visibility != View.GONE) {
+                        if (messageEditText.visibility != View.INVISIBLE) {
                             TransitionManager.beginDelayedTransition(bottomCard)
-                            messageEditText.gone()
+                            messageEditText.hide()
+                            messageSend.hide()
                         }
                     }
                 }
             })
         }
+
+        subs.add(RxView.clicks(messageSend)
+                .toFlowable(BackpressureStrategy.LATEST)
+                .map { messageEditText.text.trim().toString() }
+                .filter { it.isNotEmpty() }
+                .doOnNext {
+                    homeViewModel.sendPush(it)
+                    messageEditText.run {
+                        setText("")
+                        hideKeyboard()
+                    }
+                }.subscribe())
     }
 
     private fun fireBaseAuthWithGoogle(acct: GoogleSignInAccount) {
