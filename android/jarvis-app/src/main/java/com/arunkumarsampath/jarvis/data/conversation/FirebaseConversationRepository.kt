@@ -19,7 +19,12 @@ constructor(
 ) : ConversationRepository {
 
     override fun conversations(pageSize: Int): Flowable<PagedList<ConversationItem>> {
-        return RxPagedListBuilder(pagedFirebaseDatasourceFactory, pageSize)
+        val pagedListConfig = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(pageSize * 2)
+                .setPageSize(pageSize)
+                .build()
+        return RxPagedListBuilder(pagedFirebaseDatasourceFactory, pagedListConfig)
                 .setFetchScheduler(io)
                 .buildFlowable(LATEST)
     }

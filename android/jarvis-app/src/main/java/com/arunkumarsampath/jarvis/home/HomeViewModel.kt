@@ -22,7 +22,7 @@ constructor(
 
     init {
         subs.add(conversationRepository
-                .conversations(200)
+                .conversations(100)
                 .subscribe(conversationItemsLiveData::postValue))
     }
 

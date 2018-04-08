@@ -12,9 +12,7 @@ class FirebaseKeyedDataSource<T : KeyProvider>(
         private val databaseReference: DatabaseReference
 ) : ItemKeyedDataSource<String, T>() {
 
-    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<T>) {
-        loadAtKey(params, callback)
-    }
+    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<T>) {}
 
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<T>) {
         val loadSize = params.requestedLoadSize
@@ -23,7 +21,6 @@ class FirebaseKeyedDataSource<T : KeyProvider>(
                     .orderByKey()
                     .limitToFirst(loadSize).apply {
                         addValueEventListener(object : InvalidateAwareListener(this) {
-
                             override fun onCancelled(databaseError: DatabaseError) {
                                 callback.onResult(ArrayList())
                             }
