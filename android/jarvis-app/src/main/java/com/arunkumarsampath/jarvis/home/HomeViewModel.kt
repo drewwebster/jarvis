@@ -12,7 +12,7 @@ import javax.inject.Inject
 class HomeViewModel
 @Inject
 constructor(
-        conversationRepository: ConversationRepository,
+        private val conversationRepository: ConversationRepository,
         @param:UI private val scheduler: Scheduler
 ) : ViewModel() {
     private val subs = CompositeDisposable()
@@ -20,6 +20,9 @@ constructor(
     val conversationItemsLiveData = MutableLiveData<List<ConversationItem>>()
 
     init {
+    }
+
+    fun loadConversations() {
         subs.add(conversationRepository
                 .conversations(100)
                 .subscribe(conversationItemsLiveData::postValue))

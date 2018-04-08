@@ -21,11 +21,12 @@
 
 package com.arunkumarsampath.jarvis.di.activity
 
-import com.arunkumarsampath.jarvis.R
 import android.app.Activity
+import com.arunkumarsampath.jarvis.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.tbruyelle.rxpermissions2.RxPermissions
 import dagger.Module
 import dagger.Provides
 
@@ -45,4 +46,7 @@ class ActivityModule(private val activity: Activity) {
                 .build()
         return GoogleSignIn.getClient(activity, gso)
     }
+
+    @Provides
+    internal fun rxPermissions() = RxPermissions(activity)
 }

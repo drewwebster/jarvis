@@ -82,8 +82,9 @@ dependencies {
     implementation "android.arch.paging:runtime:1.0.0-beta1"
     implementation "android.arch.paging:rxjava2:1.0.0-alpha1"
 
-    // Permissions
+    // Activity results
     implementation 'com.petarmarijanovic:rx-activity-result:2.1.0'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
 
     // Dependency Injection
     implementation 'com.google.dagger:dagger:2.15'

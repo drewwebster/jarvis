@@ -21,9 +21,12 @@
 
 package com.arunkumarsampath.jarvis.home
 
+import android.Manifest
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import com.arunkumarsampath.jarvis.R
 import com.arunkumarsampath.jarvis.common.base.BaseActivity
@@ -37,6 +40,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.tbruyelle.rxpermissions2.RxPermissions
 import durdinapps.rxfirebase2.RxFirebaseAuth
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -56,6 +60,8 @@ class HomeActivity : BaseActivity() {
     lateinit var auth: FirebaseAuth
     @Inject
     lateinit var factory: ViewModelFactory
+    @Inject
+    lateinit var rxPermission: RxPermissions
 
     private val conversationAdapter = ConversationAdapter()
 
@@ -66,6 +72,16 @@ class HomeActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         setupChatUi()
         observeViewModel()
+        setupRecognition()
+    }
+
+    private fun setupRecognition() {
+        subs.add(rxPermission
+                .request(Manifest.permission.RECORD_AUDIO)
+                .subscribe { granted ->
+                    if (granted) {
+                    }
+                })
     }
 
     override fun onStart() {
@@ -73,7 +89,23 @@ class HomeActivity : BaseActivity() {
         val currentUser = auth.currentUser
         if (currentUser == null) {
             startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
+        } else {
+            homeViewModel.loadConversations()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -118,7 +150,10 @@ class HomeActivity : BaseActivity() {
                 .subscribeOn(Schedulers.io())
                 .map { authResult -> authResult.user != null }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ logged -> Timber.d("Logged $logged") }, Timber::e))
+                .subscribe({ logged ->
+                    Timber.d("Logged $logged")
+                    homeViewModel.loadConversations()
+                }, Timber::e))
     }
 
     companion object {
