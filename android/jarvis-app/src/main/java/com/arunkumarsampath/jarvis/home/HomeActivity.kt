@@ -92,7 +92,16 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun observeViewModel() {
-        homeViewModel.conversationItemsLiveData.watch(this, conversationAdapter::submitList)
+        homeViewModel.conversationItemsLiveData.watch(this) { list ->
+            if (list != null) {
+                conversationAdapter.currentList = list
+                if (list.isNotEmpty()) {
+                    chatRecyclerView.apply {
+                        postDelayed({ smoothScrollToPosition(conversationAdapter.currentList.size - 1) }, 100)
+                    }
+                }
+            }
+        }
     }
 
 
