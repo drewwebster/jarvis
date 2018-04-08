@@ -28,10 +28,15 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.transition.TransitionManager
+import android.view.View
 import com.arunkumarsampath.jarvis.R
 import com.arunkumarsampath.jarvis.common.base.BaseActivity
 import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
 import com.arunkumarsampath.jarvis.di.viewmodel.ViewModelFactory
+import com.arunkumarsampath.jarvis.extensions.gone
+import com.arunkumarsampath.jarvis.extensions.show
 import com.arunkumarsampath.jarvis.extensions.watch
 import com.arunkumarsampath.jarvis.home.conversation.ConversationAdapter
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -141,6 +146,22 @@ class HomeActivity : BaseActivity() {
         chatRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity).apply { stackFromEnd = true }
             adapter = conversationAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                    val visibleItem = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                    if (visibleItem == adapter.itemCount - 1) {
+                        if (messageEditText.visibility != View.VISIBLE) {
+                            TransitionManager.beginDelayedTransition(bottomCard)
+                            messageEditText.show()
+                        }
+                    } else {
+                        if (messageEditText.visibility != View.GONE) {
+                            TransitionManager.beginDelayedTransition(bottomCard)
+                            messageEditText.gone()
+                        }
+                    }
+                }
+            })
         }
     }
 

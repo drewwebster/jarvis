@@ -21,4 +21,5 @@
 
 <resources>
     <string name="app_name">Jarvis</string>
+    <string name="say_something">Say something..</string>
 </resources>
