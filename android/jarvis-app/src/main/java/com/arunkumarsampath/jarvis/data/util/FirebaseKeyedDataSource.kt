@@ -1,59 +1,68 @@
 package com.arunkumarsampath.jarvis.data.util
 
-import android.arch.paging.PageKeyedDataSource
+import android.arch.paging.ItemKeyedDataSource
 import android.support.annotation.CallSuper
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
+import com.arunkumarsampath.jarvis.data.conversation.KeyProvider
+import com.google.firebase.database.*
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 
-class FirebaseKeyedDataSource<T>(
+class FirebaseKeyedDataSource<T : KeyProvider>(
         private val snapshotParser: SnapshotParser<T>,
         private val databaseReference: DatabaseReference
-) : PageKeyedDataSource<String, T>() {
+) : ItemKeyedDataSource<String, T>() {
 
-    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<String, T>) {
+    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<T>) {
         loadAtKey(params, callback)
     }
 
-    override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, T>) {
+    override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<T>) {
         val loadSize = params.requestedLoadSize
-        databaseReference.limitToFirst(loadSize).apply {
-            addValueEventListener(object : InvalidateAwareListener() {
+        try {
+            databaseReference
+                    .orderByKey()
+                    .limitToFirst(loadSize).apply {
+                        addValueEventListener(object : InvalidateAwareListener(this) {
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    callback.onResult(ArrayList(), null, null)
-                }
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                callback.onResult(ArrayList())
+                            }
 
-                override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                    val (items, currentKey) = parseChildren(dataSnapshot)
-                    callback.onResult(items, null, currentKey)
-                }
-            })
+                            override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                                val (items, _) = parseChildren(dataSnapshot)
+                                callback.onResult(items)
+                            }
+                        })
+                    }
+        } catch (e: Exception) {
+            Timber.e(e)
         }
     }
 
-    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, T>) {
+    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<T>) {
         loadAtKey(params, callback)
     }
 
-    private fun loadAtKey(params: LoadParams<String>, callback: LoadCallback<String, T>) {
+    override fun getKey(item: T) = item.key()
+
+    private fun loadAtKey(params: LoadParams<String>, callback: LoadCallback<T>) {
         val key = params.key
         val loadSize = params.requestedLoadSize
-        databaseReference.orderByKey()
+        databaseReference
+                .orderByKey()
                 .startAt(key)
-                .limitToFirst(loadSize)
-                .addValueEventListener(object : InvalidateAwareListener() {
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        callback.onResult(ArrayList(), null)
-                    }
+                .limitToFirst(loadSize).apply {
+                    addValueEventListener(object : InvalidateAwareListener(this) {
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            callback.onResult(ArrayList())
+                        }
 
-                    override fun onDataChanged(dataSnapshot: DataSnapshot) {
-                        val (items, currentKey) = parseChildren(dataSnapshot)
-                        callback.onResult(items, currentKey)
-                    }
-                })
+                        override fun onDataChanged(dataSnapshot: DataSnapshot) {
+                            val (items, currentKey) = parseChildren(dataSnapshot)
+                            callback.onResult(items.subList(1, items.size))
+                        }
+                    })
+                }
     }
 
     private fun parseChildren(dataSnapshot: DataSnapshot): Pair<List<T>, String> {
@@ -67,12 +76,14 @@ class FirebaseKeyedDataSource<T>(
         return Pair(items as List<T>, lastKey)
     }
 
-    abstract inner class InvalidateAwareListener : ValueEventListener {
+    abstract inner class InvalidateAwareListener(val query: Query) : ValueEventListener {
         val version = AtomicInteger(0)
 
         @CallSuper
         override fun onDataChange(dataSnapshot: DataSnapshot) {
+            Timber.d("Version")
             if (version.incrementAndGet() > 1) {
+                query.removeEventListener(this)
                 invalidate()
             } else {
                 onDataChanged(dataSnapshot)

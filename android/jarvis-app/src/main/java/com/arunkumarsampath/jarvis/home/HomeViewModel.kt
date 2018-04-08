@@ -21,7 +21,9 @@ constructor(
     val conversationItemsLiveData = MutableLiveData<PagedList<ConversationItem>>()
 
     init {
-        subs.add(conversationRepository.conversations().subscribe(conversationItemsLiveData::postValue))
+        subs.add(conversationRepository
+                .conversations(200)
+                .subscribe(conversationItemsLiveData::postValue))
     }
 
     override fun onCleared() {

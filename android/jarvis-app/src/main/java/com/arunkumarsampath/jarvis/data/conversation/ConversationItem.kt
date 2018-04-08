@@ -30,7 +30,10 @@ data class ConversationItem(
         var who: String = "",
         var content: String = "",
         var timestamp: Long = 0L
-) {
+) : KeyProvider {
+
+    override fun key() = key
+
     companion object {
         const val JARVIS = "jarvis"
         const val USER = "user"

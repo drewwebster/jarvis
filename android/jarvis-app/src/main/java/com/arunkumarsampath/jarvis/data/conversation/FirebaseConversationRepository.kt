@@ -18,8 +18,8 @@ constructor(
         @param:IO private val io: Scheduler
 ) : ConversationRepository {
 
-    override fun conversations(): Flowable<PagedList<ConversationItem>> {
-        return RxPagedListBuilder(pagedFirebaseDatasourceFactory, 10)
+    override fun conversations(pageSize: Int): Flowable<PagedList<ConversationItem>> {
+        return RxPagedListBuilder(pagedFirebaseDatasourceFactory, pageSize)
                 .setFetchScheduler(io)
                 .buildFlowable(LATEST)
     }
