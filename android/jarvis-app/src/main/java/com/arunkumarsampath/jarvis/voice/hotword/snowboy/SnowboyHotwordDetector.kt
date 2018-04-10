@@ -1,5 +1,6 @@
 package com.arunkumarsampath.jarvis.voice.hotword.snowboy
 
+import ai.kitt.snowboy.SnowboyDetect
 import android.Manifest.permission.RECORD_AUDIO
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Application
