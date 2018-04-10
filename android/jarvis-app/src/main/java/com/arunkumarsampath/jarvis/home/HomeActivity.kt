@@ -26,6 +26,7 @@ import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent.EXTRA_RESULTS
 import android.support.transition.TransitionManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -38,11 +39,11 @@ import com.arunkumarsampath.jarvis.extensions.hideKeyboard
 import com.arunkumarsampath.jarvis.extensions.show
 import com.arunkumarsampath.jarvis.extensions.watch
 import com.arunkumarsampath.jarvis.home.conversation.ConversationAdapter
+import com.arunkumarsampath.jarvis.util.Util
 import com.arunkumarsampath.jarvis.util.common.base.BaseActivity
 import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent.Detected
-import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent.Error
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -50,6 +51,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.jakewharton.rxbinding2.view.RxView
+import com.petarmarijanovic.rxactivityresult.RxActivityResult
 import com.tbruyelle.rxpermissions2.RxPermissions
 import durdinapps.rxfirebase2.RxFirebaseAuth
 import io.reactivex.BackpressureStrategy
@@ -78,6 +80,8 @@ class HomeActivity : BaseActivity() {
     @Inject
     lateinit var schedulerProvider: SchedulerProvider
 
+    lateinit var rxActivityResult: RxActivityResult
+
     private var isLoggedIn = false
         get() = auth.currentUser != null
 
@@ -87,6 +91,8 @@ class HomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        rxActivityResult = RxActivityResult(this)
+
         setSupportActionBar(toolbar)
         setupChatUi()
         observeViewModel()
@@ -103,16 +109,22 @@ class HomeActivity : BaseActivity() {
                             hotwordDetector.start()
                         }
                     })
-            hotwordDetector.hotwordEvents
+            subs.add(hotwordDetector.hotwordEvents
                     .observeOn(schedulerProvider.ui())
-                    .subscribe { event ->
-                        when (event) {
-                            Detected() -> onHotwordDetected()
-                            Error() -> Timber.e("Hotword error")
-                            null -> {
-                            }
-                        }
-                    }
+                    .filter { it is Detected }
+                    .doOnNext { hotwordDetector.stop() }
+                    .flatMapSingle {
+                        rxActivityResult.start(Util.getRecognizerIntent(this))
+                                .map { result ->
+                                    if (result.data != null) {
+                                        val results: ArrayList<out String>? = result.data.getStringArrayListExtra(EXTRA_RESULTS)
+                                        return@map results!![0]
+                                    } else return@map NO_COMMAND
+                                }
+                    }.doOnNext { hotwordDetector.start() }
+                    .filter { it != NO_COMMAND }
+                    .doOnNext { homeViewModel.sendPush(it) }
+                    .subscribe())
         }
     }
 
@@ -224,5 +236,9 @@ class HomeActivity : BaseActivity() {
 
     companion object {
         private const val RC_SIGN_IN = 9001
+        private const val NO_COMMAND = "no-command"
+
     }
+
+
 }
