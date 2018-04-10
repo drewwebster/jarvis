@@ -58,7 +58,7 @@ constructor(
         }
         if (PERMISSION_GRANTED != checkSelfPermission(application, WRITE_EXTERNAL_STORAGE)
                 || PERMISSION_GRANTED != checkSelfPermission(application, RECORD_AUDIO)) {
-            hotwordEvents.onNext(HotwordEvent.HOTWORD_ERROR)
+            hotwordEvents.onNext(HotwordEvent.Error())
             return
         }
         recognitionActive = true
@@ -104,7 +104,7 @@ constructor(
 
         if (record.state != AudioRecord.STATE_INITIALIZED) {
             Timber.e("Audio Record can't initialize!")
-            hotwordEvents.onNext(HotwordEvent.HOTWORD_ERROR)
+            hotwordEvents.onNext(HotwordEvent.Error())
             return
         }
 
@@ -126,10 +126,10 @@ constructor(
 
             when {
                 result == SNOWBOY_ERROR -> {
-                    hotwordEvents.onNext(HotwordEvent.HOTWORD_ERROR)
+                    hotwordEvents.onNext(HotwordEvent.Error())
                 }
                 result > SNOWBOY_DETECTED_THRESHOLD -> {
-                    hotwordEvents.onNext(HotwordEvent.HOTWORD_DETECTED)
+                    hotwordEvents.onNext(HotwordEvent.Detected())
                     Timber.i("Hotword ${Integer.toString(result)} detected!")
                 }
             }

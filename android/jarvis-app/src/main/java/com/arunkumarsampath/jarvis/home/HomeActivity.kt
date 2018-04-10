@@ -41,8 +41,8 @@ import com.arunkumarsampath.jarvis.home.conversation.ConversationAdapter
 import com.arunkumarsampath.jarvis.util.common.base.BaseActivity
 import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector
-import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent.HOTWORD_DETECTED
-import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent.HOTWORD_ERROR
+import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent.Detected
+import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent.Error
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -107,8 +107,8 @@ class HomeActivity : BaseActivity() {
                     .observeOn(schedulerProvider.ui())
                     .subscribe { event ->
                         when (event) {
-                            HOTWORD_DETECTED -> onHotwordDetected()
-                            HOTWORD_ERROR -> Timber.e("Hotword error")
+                            Detected() -> onHotwordDetected()
+                            Error() -> Timber.e("Hotword error")
                             null -> {
                             }
                         }
