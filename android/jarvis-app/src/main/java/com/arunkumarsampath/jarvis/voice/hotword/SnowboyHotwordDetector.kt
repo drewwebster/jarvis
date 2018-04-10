@@ -1,4 +1,4 @@
-package com.arunkumarsampath.jarvis.voice.hotword.snowboy
+package com.arunkumarsampath.jarvis.voice.hotword
 
 import ai.kitt.snowboy.SnowboyDetect
 import android.Manifest.permission.RECORD_AUDIO
@@ -12,7 +12,6 @@ import android.os.Environment
 import android.os.Process
 import android.os.Process.setThreadPriority
 import android.support.v4.content.ContextCompat.checkSelfPermission
-import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -53,6 +52,7 @@ constructor(
     }
 
     override fun start() {
+        Timber.d("Start")
         if (recordingThread != null) {
             return
         }
@@ -66,6 +66,7 @@ constructor(
     }
 
     override fun stop() {
+        Timber.d("Stop")
         if (recordingThread != null) {
             recognitionActive = false
             recordingThread = null
