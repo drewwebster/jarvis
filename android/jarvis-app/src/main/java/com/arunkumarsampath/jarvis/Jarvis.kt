@@ -31,7 +31,7 @@ import timber.log.Timber
  * Created by arunk on 06-03-2018.
  */
 class Jarvis : Application() {
-    private var appComponent: AppComponent? = null
+    private lateinit var appComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()
@@ -42,7 +42,5 @@ class Jarvis : Application() {
                 .build()
     }
 
-    fun getAppComponent(): AppComponent {
-        return appComponent!!
-    }
+    fun getAppComponent() = appComponent
 }
