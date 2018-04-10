@@ -6,7 +6,7 @@
  * the SWIG interface file instead.
  * ----------------------------------------------------------------------------- */
 
-package com.arunkumarsampath.jarvis.voice;
+package com.arunkumarsampath.jarvis.voice.hotword.snowboy;
 
 public class SnowboyDetect {
     private transient long swigCPtr;

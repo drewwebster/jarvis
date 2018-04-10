@@ -21,13 +21,12 @@
 
 package com.arunkumarsampath.jarvis.home
 
-import android.Manifest
+import android.Manifest.permission.RECORD_AUDIO
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.transition.TransitionManager
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -40,6 +39,10 @@ import com.arunkumarsampath.jarvis.extensions.show
 import com.arunkumarsampath.jarvis.extensions.watch
 import com.arunkumarsampath.jarvis.home.conversation.ConversationAdapter
 import com.arunkumarsampath.jarvis.util.common.base.BaseActivity
+import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
+import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector
+import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent.HOTWORD_DETECTED
+import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent.HOTWORD_ERROR
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -70,6 +73,13 @@ class HomeActivity : BaseActivity() {
     lateinit var factory: ViewModelFactory
     @Inject
     lateinit var rxPermission: RxPermissions
+    @Inject
+    lateinit var hotwordDetector: HotwordDetector
+    @Inject
+    lateinit var schedulerProvider: SchedulerProvider
+
+    private var isLoggedIn = false
+        get() = auth.currentUser != null
 
     private val conversationAdapter = ConversationAdapter()
 
@@ -80,22 +90,35 @@ class HomeActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         setupChatUi()
         observeViewModel()
+
         setupRecognition()
     }
 
     private fun setupRecognition() {
-        subs.add(rxPermission
-                .request(Manifest.permission.RECORD_AUDIO)
-                .subscribe { granted ->
-                    if (granted) {
+        if (isLoggedIn) {
+            subs.add(rxPermission
+                    .requestEach(RECORD_AUDIO, WRITE_EXTERNAL_STORAGE)
+                    .subscribe { permission ->
+                        if (permission.granted) {
+                            hotwordDetector.start()
+                        }
+                    })
+            hotwordDetector.hotwordEvents
+                    .observeOn(schedulerProvider.ui())
+                    .subscribe { event ->
+                        when (event) {
+                            HOTWORD_DETECTED -> onHotwordDetected()
+                            HOTWORD_ERROR -> Timber.e("Hotword error")
+                            null -> {
+                            }
+                        }
                     }
-                })
+        }
     }
 
     override fun onStart() {
         super.onStart()
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
+        if (!isLoggedIn) {
             startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
         } else {
             homeViewModel.loadConversations()
@@ -104,11 +127,11 @@ class HomeActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-        }
+        hotwordDetector.start()
     }
 
     override fun onPause() {
+        hotwordDetector.stop()
         super.onPause()
     }
 
@@ -191,7 +214,12 @@ class HomeActivity : BaseActivity() {
                 .subscribe({ logged ->
                     Timber.d("Logged $logged")
                     homeViewModel.loadConversations()
+                    setupRecognition()
                 }, Timber::e))
+    }
+
+    private fun onHotwordDetected() {
+        Timber.d("Hotword detected")
     }
 
     companion object {

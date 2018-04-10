@@ -2,17 +2,16 @@ package com.arunkumarsampath.jarvis.home.conversation.data
 
 import android.arch.paging.PagedList
 import android.arch.paging.RxPagedListBuilder
+import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
 import com.arunkumarsampath.jarvis.util.firebase.PagedFirebaseDatasourceFactory
 import com.arunkumarsampath.jarvis.util.firebase.SnapshotParser
-import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
-import com.arunkumarsampath.jarvis.util.executor.IO
+import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import io.reactivex.BackpressureStrategy.LATEST
 import io.reactivex.Flowable
-import io.reactivex.Scheduler
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,7 +20,7 @@ class FirebaseConversationRepository
 @Inject
 constructor(
         private val pagedFirebaseDatasourceFactory: PagedFirebaseDatasourceFactory<ConversationItem>,
-        @param:IO private val io: Scheduler,
+        private val schedulerProvider: SchedulerProvider,
         @param:Conversations private val databaseReference: DatabaseReference,
         private val conversationParser: SnapshotParser<ConversationItem>
 ) : ConversationRepository {
@@ -33,7 +32,7 @@ constructor(
                 .setPageSize(pageSize)
                 .build()
         return RxPagedListBuilder(pagedFirebaseDatasourceFactory, pagedListConfig)
-                .setFetchScheduler(io)
+                .setFetchScheduler(schedulerProvider.io())
                 .buildFlowable(LATEST)
     }
 
@@ -41,7 +40,7 @@ constructor(
         return Flowable.create({ emitter ->
             val listener = object : ValueEventListener {
                 override fun onCancelled(databaseError: DatabaseError) {
-                    emitter.onError(databaseError.toException())
+                    // emitter.onError(databaseError.toException())
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {

@@ -23,6 +23,8 @@ package com.arunkumarsampath.jarvis.di.app
 
 import android.app.Application
 import com.arunkumarsampath.jarvis.di.viewmodel.ViewModelModule
+import com.arunkumarsampath.jarvis.util.scheduler.AppSchedulerProvider
+import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -40,5 +42,11 @@ class AppModule(private var application: Application) {
     @Provides
     internal fun firebaseAuth(): FirebaseAuth {
         return FirebaseAuth.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    internal fun povidesSchedulers(): SchedulerProvider {
+        return AppSchedulerProvider()
     }
 }
