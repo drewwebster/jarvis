@@ -147,10 +147,6 @@ class HomeActivity : BaseActivity() {
         super.onPause()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
@@ -230,15 +226,9 @@ class HomeActivity : BaseActivity() {
                 }, Timber::e))
     }
 
-    private fun onHotwordDetected() {
-        Timber.d("Hotword detected")
-    }
 
     companion object {
         private const val RC_SIGN_IN = 9001
         private const val NO_COMMAND = "no-command"
-
     }
-
-
 }
