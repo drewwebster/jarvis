@@ -26,7 +26,6 @@ import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.speech.RecognizerIntent.EXTRA_RESULTS
 import android.support.transition.TransitionManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -39,11 +38,11 @@ import com.arunkumarsampath.jarvis.extensions.hideKeyboard
 import com.arunkumarsampath.jarvis.extensions.show
 import com.arunkumarsampath.jarvis.extensions.watch
 import com.arunkumarsampath.jarvis.home.conversation.ConversationAdapter
-import com.arunkumarsampath.jarvis.util.Util
 import com.arunkumarsampath.jarvis.util.common.base.BaseActivity
 import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent.Detected
+import com.arunkumarsampath.jarvis.voice.speech.AndroidSpeechRecognizer
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -55,10 +54,13 @@ import com.petarmarijanovic.rxactivityresult.RxActivityResult
 import com.tbruyelle.rxpermissions2.RxPermissions
 import durdinapps.rxfirebase2.RxFirebaseAuth
 import io.reactivex.BackpressureStrategy
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -78,12 +80,16 @@ class HomeActivity : BaseActivity() {
     @Inject
     lateinit var hotwordDetector: HotwordDetector
     @Inject
+    lateinit var androidSpeechRecognizer: AndroidSpeechRecognizer
+    @Inject
     lateinit var schedulerProvider: SchedulerProvider
 
     lateinit var rxActivityResult: RxActivityResult
 
     private var isLoggedIn = false
         get() = auth.currentUser != null
+
+    private var speechRecognizerSubject = PublishSubject.create<Int>()
 
     private val conversationAdapter = ConversationAdapter()
 
@@ -109,20 +115,19 @@ class HomeActivity : BaseActivity() {
                             hotwordDetector.start()
                         }
                     })
+
             subs.add(hotwordDetector.hotwordEvents
                     .observeOn(schedulerProvider.ui())
                     .filter { it is Detected }
+                    .doOnNext { speechRecognizerSubject.onNext(0) }
+                    .subscribe())
+
+            subs.add(Observable.merge(speechRecognizerSubject, RxView.clicks(fab).map { 0 })
                     .doOnNext { hotwordDetector.stop() }
-                    .flatMapSingle {
-                        rxActivityResult.start(Util.getRecognizerIntent(this))
-                                .map { result ->
-                                    if (result.data != null) {
-                                        val results: ArrayList<out String>? = result.data.getStringArrayListExtra(EXTRA_RESULTS)
-                                        return@map results!![0]
-                                    } else return@map NO_COMMAND
-                                }
-                    }.doOnNext { hotwordDetector.start() }
-                    .filter { it != NO_COMMAND }
+                    .flatMapSingle { androidSpeechRecognizer.speechDetected }
+                    .delay(300, TimeUnit.MILLISECONDS)
+                    .doOnNext { hotwordDetector.start() }
+                    .filter { it != AndroidSpeechRecognizer.NO_COMMAND }
                     .doOnNext { homeViewModel.sendPush(it) }
                     .subscribe())
         }
@@ -159,6 +164,7 @@ class HomeActivity : BaseActivity() {
                     Timber.e(e)
                 }
             }
+            AndroidSpeechRecognizer.REQUEST_CODE -> androidSpeechRecognizer.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -206,10 +212,7 @@ class HomeActivity : BaseActivity() {
                 .filter { it.isNotEmpty() }
                 .doOnNext {
                     homeViewModel.sendPush(it)
-                    messageEditText.run {
-                        setText("")
-                        hideKeyboard()
-                    }
+                    messageEditText.hideKeyboard()
                 }.subscribe())
     }
 
@@ -226,9 +229,7 @@ class HomeActivity : BaseActivity() {
                 }, Timber::e))
     }
 
-
     companion object {
         private const val RC_SIGN_IN = 9001
-        private const val NO_COMMAND = "no-command"
     }
 }

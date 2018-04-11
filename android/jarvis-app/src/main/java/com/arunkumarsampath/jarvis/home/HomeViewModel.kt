@@ -28,7 +28,7 @@ constructor(
     }
 
     fun sendPush(message: String) {
-        subs.add(sendPushUseCase.executeSingle(message).subscribe())
+        subs.add(sendPushUseCase.buildSingle(message).subscribe())
     }
 
     override fun onCleared() {

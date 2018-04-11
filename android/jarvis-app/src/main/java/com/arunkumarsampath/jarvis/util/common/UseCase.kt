@@ -6,7 +6,7 @@ import io.reactivex.Single
 
 abstract class UseCase<in Request, Response>(val schedulerProvider: SchedulerProvider) {
 
-    abstract fun executeSingle(request: Request? = null): Single<Response>
+    abstract fun buildSingle(request: Request? = null): Single<Response>
 
-    fun execute(request: Request? = null): Completable = executeSingle(request).toCompletable()
+    fun buildCompletable(request: Request? = null): Completable = buildSingle(request).toCompletable()
 }

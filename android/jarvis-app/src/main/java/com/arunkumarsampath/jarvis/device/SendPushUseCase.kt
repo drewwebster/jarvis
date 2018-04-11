@@ -12,7 +12,7 @@ class SendPushUseCase
 constructor(val sp: SchedulerProvider,
             private val joinMessagingApi: JoinMessagingApi) : UseCase<String, String>(sp) {
 
-    override fun executeSingle(request: String?): Single<String> {
+    override fun buildSingle(request: String?): Single<String> {
         return joinMessagingApi.sendPush(
                 text = """pivoice=:=$request""",
                 deviceId = BuildConfig.PICHROME_DEVICE_ID,
