@@ -19,7 +19,7 @@ class AndroidSpeechRecognizer @Inject constructor(val activity: Activity) {
         get() = Observable.just(0)
                 .flatMap {
                     activity.startActivityForResult(Util.getRecognizerIntent(activity), REQUEST_CODE)
-                    activityResultSubject.timeout(4, TimeUnit.SECONDS)
+                    activityResultSubject.timeout(5, TimeUnit.SECONDS)
                 }.firstOrError()
                 .doOnError { activity.finishActivity(REQUEST_CODE) }
                 .onErrorReturn { NO_COMMAND }
