@@ -6,6 +6,7 @@ import com.arunkumarsampath.jarvis.device.SendPushUseCase
 import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
 import com.arunkumarsampath.jarvis.home.conversation.data.ConversationRepository
 import io.reactivex.disposables.CompositeDisposable
+import timber.log.Timber
 import javax.inject.Inject
 
 class HomeViewModel
@@ -28,6 +29,7 @@ constructor(
     }
 
     fun sendPush(message: String) {
+        Timber.d("Jarvis command : $message")
         subs.add(sendPushUseCase.buildSingle(message).subscribe())
     }
 
