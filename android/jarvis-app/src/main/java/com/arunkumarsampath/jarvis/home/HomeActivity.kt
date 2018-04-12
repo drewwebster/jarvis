@@ -34,7 +34,6 @@ import com.arunkumarsampath.jarvis.R
 import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
 import com.arunkumarsampath.jarvis.di.viewmodel.ViewModelFactory
 import com.arunkumarsampath.jarvis.extensions.hide
-import com.arunkumarsampath.jarvis.extensions.hideKeyboard
 import com.arunkumarsampath.jarvis.extensions.show
 import com.arunkumarsampath.jarvis.extensions.watch
 import com.arunkumarsampath.jarvis.home.conversation.ConversationAdapter
@@ -212,7 +211,7 @@ class HomeActivity : BaseActivity() {
                 .filter { it.isNotEmpty() }
                 .doOnNext {
                     homeViewModel.sendPush(it)
-                    messageEditText.hideKeyboard()
+                    messageEditText.setText("")
                 }.subscribe())
     }
 

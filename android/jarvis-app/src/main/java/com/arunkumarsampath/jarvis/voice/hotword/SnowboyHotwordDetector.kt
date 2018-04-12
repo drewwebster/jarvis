@@ -13,6 +13,7 @@ import android.os.Process
 import android.os.Process.setThreadPriority
 import android.support.v4.content.ContextCompat.checkSelfPermission
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent
+import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import timber.log.Timber
@@ -28,7 +29,16 @@ constructor(
         private val application: Application
 ) : HotwordDetector {
 
-    override var hotwordEvents: Subject<HotwordEvent> = BehaviorSubject.create<HotwordEvent>().toSerialized()
+    private var hotwordEventSubject: Subject<HotwordEvent> = BehaviorSubject.create<HotwordEvent>().toSerialized()
+
+    override var hotwordEvents: Observable<HotwordEvent> = hotwordEventSubject
+            .map { event ->
+                if (event is HotwordEvent.Error) {
+                    stop()
+                    start()
+                }
+                event
+            }
 
     private var recordingThread: Thread? = null
     private var recognitionActive = false
@@ -58,7 +68,7 @@ constructor(
         }
         if (PERMISSION_GRANTED != checkSelfPermission(application, WRITE_EXTERNAL_STORAGE)
                 || PERMISSION_GRANTED != checkSelfPermission(application, RECORD_AUDIO)) {
-            hotwordEvents.onNext(HotwordEvent.Error())
+            hotwordEventSubject.onNext(HotwordEvent.Error())
             return
         }
         recognitionActive = true
@@ -105,7 +115,7 @@ constructor(
 
         if (record.state != AudioRecord.STATE_INITIALIZED) {
             Timber.e("Audio Record can't initialize!")
-            hotwordEvents.onNext(HotwordEvent.Error())
+            hotwordEventSubject.onNext(HotwordEvent.Error())
             return
         }
 
@@ -115,24 +125,29 @@ constructor(
 
         var shortsRead: Long = 0
         while (recognitionActive) {
-            record.read(audioBuffer, 0, audioBuffer.size)
+            try {
+                record.read(audioBuffer, 0, audioBuffer.size)
 
-            // Converts to short array.
-            val audioData = ShortArray(audioBuffer.size / 2)
-            ByteBuffer.wrap(audioBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(audioData)
+                // Converts to short array.
+                val audioData = ShortArray(audioBuffer.size / 2)
+                ByteBuffer.wrap(audioBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(audioData)
 
-            shortsRead += audioData.size.toLong()
+                shortsRead += audioData.size.toLong()
 
-            val result = snowboyDetector!!.RunDetection(audioData, audioData.size)
+                val result = snowboyDetector!!.RunDetection(audioData, audioData.size)
 
-            when {
-                result == SNOWBOY_ERROR -> {
-                    hotwordEvents.onNext(HotwordEvent.Error())
+                when {
+                    result == SNOWBOY_ERROR -> {
+                        hotwordEventSubject.onNext(HotwordEvent.Error())
+                    }
+                    result > SNOWBOY_DETECTED_THRESHOLD -> {
+                        hotwordEventSubject.onNext(HotwordEvent.Detected())
+                        Timber.i("Hotword ${Integer.toString(result)} detected!")
+                    }
                 }
-                result > SNOWBOY_DETECTED_THRESHOLD -> {
-                    hotwordEvents.onNext(HotwordEvent.Detected())
-                    Timber.i("Hotword ${Integer.toString(result)} detected!")
-                }
+            } catch (e: Exception) {
+                Timber.e(e)
+                hotwordEventSubject.onNext(HotwordEvent.Error())
             }
         }
 

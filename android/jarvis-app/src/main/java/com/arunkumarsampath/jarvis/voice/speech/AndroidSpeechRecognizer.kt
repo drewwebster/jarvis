@@ -8,6 +8,7 @@ import com.arunkumarsampath.jarvis.util.Util
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -19,7 +20,7 @@ class AndroidSpeechRecognizer @Inject constructor(val activity: Activity) {
         get() = Observable.just(0)
                 .flatMap {
                     activity.startActivityForResult(Util.getRecognizerIntent(activity), REQUEST_CODE)
-                    activityResultSubject.timeout(5, TimeUnit.SECONDS)
+                    activityResultSubject.timeout(6, TimeUnit.SECONDS)
                 }.firstOrError()
                 .doOnError { activity.finishActivity(REQUEST_CODE) }
                 .onErrorReturn { NO_COMMAND }
@@ -29,6 +30,8 @@ class AndroidSpeechRecognizer @Inject constructor(val activity: Activity) {
             REQUEST_CODE -> if (data != null) {
                 val results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 activityResultSubject.onNext(results!![0])
+            } else {
+                Timber.e("Data null!")
             }
         }
     }

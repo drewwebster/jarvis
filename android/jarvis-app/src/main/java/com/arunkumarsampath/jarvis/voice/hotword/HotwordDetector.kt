@@ -1,6 +1,6 @@
 package com.arunkumarsampath.jarvis.voice.hotword
 
-import io.reactivex.subjects.Subject
+import io.reactivex.Observable
 
 interface HotwordDetector : LifecycleBoundProcess {
     sealed class HotwordEvent {
@@ -8,5 +8,5 @@ interface HotwordDetector : LifecycleBoundProcess {
         class Error : HotwordEvent()
     }
 
-    var hotwordEvents: Subject<HotwordEvent>
+    var hotwordEvents: Observable<HotwordEvent>
 }
