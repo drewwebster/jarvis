@@ -42,6 +42,7 @@ import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent.Detected
 import com.arunkumarsampath.jarvis.voice.speech.AndroidSpeechRecognizer
+import com.arunkumarsampath.jarvis.voice.speech.AndroidSpeechRecognizer.Companion.NO_COMMAND
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -54,8 +55,6 @@ import com.tbruyelle.rxpermissions2.RxPermissions
 import durdinapps.rxfirebase2.RxFirebaseAuth
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
@@ -126,7 +125,7 @@ class HomeActivity : BaseActivity() {
                     .flatMapSingle { androidSpeechRecognizer.speechDetected }
                     .delay(300, TimeUnit.MILLISECONDS)
                     .doOnNext { hotwordDetector.start() }
-                    .filter { it != AndroidSpeechRecognizer.NO_COMMAND }
+                    .filter { it != NO_COMMAND }
                     .doOnNext { homeViewModel.sendPush(it) }
                     .subscribe())
         }
@@ -218,9 +217,9 @@ class HomeActivity : BaseActivity() {
     private fun fireBaseAuthWithGoogle(acct: GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         subs.add(RxFirebaseAuth.signInWithCredential(auth, credential)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(schedulerProvider.io())
                 .map { authResult -> authResult.user != null }
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(schedulerProvider.ui())
                 .subscribe({ logged ->
                     Timber.d("Logged $logged")
                     homeViewModel.loadConversations()
