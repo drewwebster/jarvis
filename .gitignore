@@ -1,2 +1,4 @@
 /pi-scripts/common
 .vscode/settings.json
+/firebase/functions/node_modules/
+/firebase/functions/lib
