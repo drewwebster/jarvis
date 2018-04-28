@@ -31,16 +31,15 @@ import timber.log.Timber
  * Created by arunk on 06-03-2018.
  */
 class Jarvis : Application() {
-    private lateinit var appComponent: AppComponent
+    lateinit var appComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()
+
         Timber.plant(Timber.DebugTree())
 
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
                 .build()
     }
-
-    fun getAppComponent() = appComponent
 }

@@ -27,14 +27,12 @@ import com.arunkumarsampath.jarvis.di.activity.ActivityModule
 import com.arunkumarsampath.jarvis.di.service.ServiceComponent
 import com.arunkumarsampath.jarvis.di.service.ServiceModule
 import com.arunkumarsampath.jarvis.home.conversation.data.ConversationModule
-import com.arunkumarsampath.jarvis.voice.VoiceModule
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [
     AppModule::class,
-    VoiceModule::class,
     JoinApiModule::class,
     ConversationModule::class
 ])

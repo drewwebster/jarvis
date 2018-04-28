@@ -21,8 +21,11 @@
 
 package com.arunkumarsampath.jarvis.di.activity
 
-import android.app.Activity
+import android.arch.lifecycle.LifecycleOwner
+import android.support.v7.app.AppCompatActivity
 import com.arunkumarsampath.jarvis.R
+import com.arunkumarsampath.jarvis.di.scopes.PerActivity
+import com.arunkumarsampath.jarvis.voice.VoiceModule
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -30,15 +33,23 @@ import com.tbruyelle.rxpermissions2.RxPermissions
 import dagger.Module
 import dagger.Provides
 
-@Module
-class ActivityModule(private val activity: Activity) {
+@Module(includes = [VoiceModule::class])
+class ActivityModule(private val activity: AppCompatActivity) {
 
     @Provides
-    internal fun activity(): Activity {
+    @PerActivity
+    internal fun activity(): AppCompatActivity {
         return activity
     }
 
     @Provides
+    @PerActivity
+    internal fun provideLifecycle(): LifecycleOwner {
+        return activity
+    }
+
+    @Provides
+    @PerActivity
     internal fun googleSignInClient(): GoogleSignInClient {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(activity.getString(R.string.default_web_client_id))
@@ -48,5 +59,6 @@ class ActivityModule(private val activity: Activity) {
     }
 
     @Provides
+    @PerActivity
     internal fun rxPermissions() = RxPermissions(activity)
 }

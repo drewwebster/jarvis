@@ -4,6 +4,10 @@ import ai.kitt.snowboy.SnowboyDetect
 import android.Manifest.permission.RECORD_AUDIO
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Application
+import android.arch.lifecycle.Lifecycle.Event.*
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.OnLifecycleEvent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.media.AudioFormat
 import android.media.AudioRecord
@@ -12,6 +16,7 @@ import android.os.Environment
 import android.os.Process
 import android.os.Process.setThreadPriority
 import android.support.v4.content.ContextCompat.checkSelfPermission
+import com.arunkumarsampath.jarvis.di.scopes.PerActivity
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
@@ -23,11 +28,17 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.inject.Inject
 
+@PerActivity
 class SnowboyHotwordDetector
 @Inject
 constructor(
-        private val application: Application
-) : HotwordDetector {
+        private val application: Application,
+        lifecycleOwner: LifecycleOwner
+) : HotwordDetector, LifecycleObserver {
+
+    init {
+        lifecycleOwner.lifecycle.addObserver(this)
+    }
 
     private var hotwordEventSubject: Subject<HotwordEvent> = BehaviorSubject.create<HotwordEvent>().toSerialized()
 
@@ -61,6 +72,7 @@ constructor(
         }
     }
 
+    @OnLifecycleEvent(ON_START)
     override fun start() {
         Timber.d("Start")
         if (recordingThread != null) {
@@ -75,6 +87,7 @@ constructor(
         recordingThread = Thread { recordLoop() }.apply { start() }
     }
 
+    @OnLifecycleEvent(ON_STOP)
     override fun stop() {
         Timber.d("Stop")
         if (recordingThread != null) {
@@ -83,7 +96,9 @@ constructor(
         }
     }
 
-    override fun cleanup() {
+    @OnLifecycleEvent(ON_DESTROY)
+    override fun cleanup(lifecycleOwner: LifecycleOwner) {
+        lifecycleOwner.lifecycle.removeObserver(this)
         stop()
     }
 

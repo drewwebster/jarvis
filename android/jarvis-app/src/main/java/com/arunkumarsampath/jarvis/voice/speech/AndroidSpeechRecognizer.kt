@@ -1,8 +1,8 @@
 package com.arunkumarsampath.jarvis.voice.speech
 
-import android.app.Activity
 import android.content.Intent
 import android.speech.RecognizerIntent
+import android.support.v7.app.AppCompatActivity
 import com.arunkumarsampath.jarvis.di.scopes.PerActivity
 import com.arunkumarsampath.jarvis.util.Util
 import io.reactivex.Observable
@@ -13,7 +13,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @PerActivity
-class AndroidSpeechRecognizer @Inject constructor(val activity: Activity) {
+class AndroidSpeechRecognizer @Inject constructor(val activity: AppCompatActivity) {
+
     private val activityResultSubject = PublishSubject.create<String>()
 
     val speechDetected: Single<String>

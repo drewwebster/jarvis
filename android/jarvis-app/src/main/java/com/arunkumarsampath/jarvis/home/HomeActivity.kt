@@ -33,6 +33,7 @@ import android.view.View
 import com.arunkumarsampath.jarvis.R
 import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
 import com.arunkumarsampath.jarvis.di.viewmodel.ViewModelFactory
+import com.arunkumarsampath.jarvis.extensions.clicks
 import com.arunkumarsampath.jarvis.extensions.hide
 import com.arunkumarsampath.jarvis.extensions.show
 import com.arunkumarsampath.jarvis.extensions.watch
@@ -49,7 +50,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.jakewharton.rxbinding2.view.RxView
 import com.petarmarijanovic.rxactivityresult.RxActivityResult
 import com.tbruyelle.rxpermissions2.RxPermissions
 import durdinapps.rxfirebase2.RxFirebaseAuth
@@ -120,7 +120,7 @@ class HomeActivity : BaseActivity() {
                     .doOnNext { speechRecognizerSubject.onNext(0) }
                     .subscribe())
 
-            subs.add(Observable.merge(speechRecognizerSubject, RxView.clicks(fab).map { 0 })
+            subs.add(Observable.merge(speechRecognizerSubject, fab.clicks().map { 0 })
                     .doOnNext { hotwordDetector.stop() }
                     .flatMapSingle { androidSpeechRecognizer.speechDetected }
                     .delay(300, TimeUnit.MILLISECONDS)
@@ -138,16 +138,6 @@ class HomeActivity : BaseActivity() {
         } else {
             homeViewModel.loadConversations()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        hotwordDetector.start()
-    }
-
-    override fun onPause() {
-        hotwordDetector.stop()
-        super.onPause()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -204,7 +194,7 @@ class HomeActivity : BaseActivity() {
             })
         }
 
-        subs.add(RxView.clicks(messageSend)
+        subs.add(messageSend.clicks()
                 .toFlowable(BackpressureStrategy.LATEST)
                 .map { messageEditText.text.trim().toString() }
                 .filter { it.isNotEmpty() }

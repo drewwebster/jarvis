@@ -21,14 +21,14 @@
 
 package com.arunkumarsampath.jarvis.util.common.base
 
-import com.arunkumarsampath.jarvis.Jarvis
-import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
-import com.arunkumarsampath.jarvis.di.activity.ActivityModule
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import butterknife.ButterKnife
 import butterknife.Unbinder
+import com.arunkumarsampath.jarvis.Jarvis
+import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
+import com.arunkumarsampath.jarvis.di.activity.ActivityModule
 import io.reactivex.disposables.CompositeDisposable
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -42,7 +42,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         activityComponent = (application as Jarvis)
-                .getAppComponent()
+                .appComponent
                 .newActivityComponent(ActivityModule(this))
         inject(activityComponent!!)
 
