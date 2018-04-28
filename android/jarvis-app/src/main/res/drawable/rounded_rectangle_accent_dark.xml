@@ -20,10 +20,10 @@
   -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="@color/colorAccentDark" />
-    <corners android:radius="56dp" />
+    <corners android:radius="@dimen/conversation_item_rounded_corner_radius" />
     <padding
-        android:bottom="4dp"
-        android:left="12dp"
-        android:right="12dp"
-        android:top="4dp" />
+        android:bottom="@dimen/conversation_item_top_padding"
+        android:left="@dimen/conversation_item_side_padding"
+        android:right="@dimen/conversation_item_side_padding"
+        android:top="@dimen/conversation_item_top_padding" />
 </shape>

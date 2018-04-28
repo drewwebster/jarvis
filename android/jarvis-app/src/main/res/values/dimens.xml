@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="conversation_item_rounded_corner_radius">20dp</dimen>
+    <dimen name="conversation_item_side_padding">16.dp</dimen>
+    <dimen name="conversation_item_top_padding">4dp</dimen>
+    <dimen name="conversation_avatar_size">36dp</dimen>
+</resources>
