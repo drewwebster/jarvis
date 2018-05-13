@@ -1,4 +1,4 @@
-package com.arunkumarsampath.jarvis.device.api
+package com.arunkumarsampath.jarvis.serveraccess.api
 
 import io.reactivex.Completable
 import retrofit2.http.GET
@@ -14,6 +14,6 @@ interface JoinMessagingApi {
     ): Completable
 
     companion object {
-        val BASE_URL = "https://joinjoaomgcd.appspot.com"
+        const val BASE_URL = "https://joinjoaomgcd.appspot.com"
     }
 }

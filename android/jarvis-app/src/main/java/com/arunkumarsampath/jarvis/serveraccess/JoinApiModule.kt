@@ -1,6 +1,6 @@
-package com.arunkumarsampath.jarvis.device
+package com.arunkumarsampath.jarvis.serveraccess
 
-import com.arunkumarsampath.jarvis.device.api.JoinMessagingApi
+import com.arunkumarsampath.jarvis.serveraccess.api.JoinMessagingApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

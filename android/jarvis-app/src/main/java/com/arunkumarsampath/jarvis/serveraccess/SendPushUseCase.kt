@@ -1,7 +1,7 @@
-package com.arunkumarsampath.jarvis.device
+package com.arunkumarsampath.jarvis.serveraccess
 
 import com.arunkumarsampath.jarvis.BuildConfig
-import com.arunkumarsampath.jarvis.device.api.JoinMessagingApi
+import com.arunkumarsampath.jarvis.serveraccess.api.JoinMessagingApi
 import com.arunkumarsampath.jarvis.util.common.UseCase
 import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
 import io.reactivex.Single
@@ -14,7 +14,7 @@ constructor(val sp: SchedulerProvider,
 
     override fun buildSingle(request: String?): Single<String> {
         return joinMessagingApi.sendPush(
-                text = """pivoice=:=$request""",
+                text = "pivoice=:=$request",
                 deviceId = BuildConfig.PICHROME_DEVICE_ID,
                 apikey = BuildConfig.JOIN_API_KEY
         ).toSingle({ "success!" /*TODO*/ })

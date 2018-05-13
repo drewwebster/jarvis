@@ -2,7 +2,7 @@ package com.arunkumarsampath.jarvis.home
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.arunkumarsampath.jarvis.device.SendPushUseCase
+import com.arunkumarsampath.jarvis.serveraccess.SendPushUseCase
 import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
 import com.arunkumarsampath.jarvis.home.conversation.data.ConversationRepository
 import io.reactivex.disposables.CompositeDisposable

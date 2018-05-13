@@ -21,7 +21,7 @@
 
 package com.arunkumarsampath.jarvis.di.app
 
-import com.arunkumarsampath.jarvis.device.JoinApiModule
+import com.arunkumarsampath.jarvis.serveraccess.JoinApiModule
 import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
 import com.arunkumarsampath.jarvis.di.activity.ActivityModule
 import com.arunkumarsampath.jarvis.di.service.ServiceComponent
