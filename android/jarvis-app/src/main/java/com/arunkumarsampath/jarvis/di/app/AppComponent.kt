@@ -21,12 +21,14 @@
 
 package com.arunkumarsampath.jarvis.di.app
 
-import com.arunkumarsampath.jarvis.serveraccess.JoinApiModule
+import com.arunkumarsampath.jarvis.conversation.ConversationModule
+import com.arunkumarsampath.jarvis.device.DeviceModule
 import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
 import com.arunkumarsampath.jarvis.di.activity.ActivityModule
 import com.arunkumarsampath.jarvis.di.service.ServiceComponent
 import com.arunkumarsampath.jarvis.di.service.ServiceModule
-import com.arunkumarsampath.jarvis.home.conversation.data.ConversationModule
+import com.arunkumarsampath.jarvis.serveraccess.join.JoinApiModule
+import com.arunkumarsampath.jarvis.serveraccess.local.LocalApiModule
 import dagger.Component
 import javax.inject.Singleton
 
@@ -34,7 +36,9 @@ import javax.inject.Singleton
 @Component(modules = [
     AppModule::class,
     JoinApiModule::class,
-    ConversationModule::class
+    LocalApiModule::class,
+    ConversationModule::class,
+    DeviceModule::class
 ])
 interface AppComponent {
     fun newActivityComponent(activityModule: ActivityModule): ActivityComponent

@@ -1,4 +1,4 @@
-package com.arunkumarsampath.jarvis.serveraccess.api
+package com.arunkumarsampath.jarvis.serveraccess.join.api
 
 import io.reactivex.Completable
 import retrofit2.http.GET
@@ -7,7 +7,7 @@ import retrofit2.http.Query
 interface JoinMessagingApi {
 
     @GET("/_ah/api/messaging/v1/sendPush")
-    fun sendPush(
+    fun sendCommand(
             @Query("text") text: String,
             @Query("deviceId") deviceId: String,
             @Query("apikey") apikey: String

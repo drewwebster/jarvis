@@ -6,6 +6,8 @@ import android.support.v7.util.AdapterListUpdateCallback
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.arunkumarsampath.jarvis.home.conversation.ConversationItem.Companion.ConversationDiffCallback
+import com.arunkumarsampath.jarvis.home.conversation.delegates.JarvisMessageDelegate
+import com.arunkumarsampath.jarvis.home.conversation.delegates.UserMessageDelegate
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager
 
 class ConversationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

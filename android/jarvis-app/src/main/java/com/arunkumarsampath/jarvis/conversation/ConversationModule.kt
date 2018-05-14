@@ -1,4 +1,4 @@
-package com.arunkumarsampath.jarvis.home.conversation.data
+package com.arunkumarsampath.jarvis.conversation
 
 import com.arunkumarsampath.jarvis.util.firebase.PagedFirebaseDatasourceFactory
 import com.arunkumarsampath.jarvis.util.firebase.SnapshotParser

@@ -23,14 +23,20 @@ package com.arunkumarsampath.jarvis.di.app
 
 import android.app.Application
 import com.arunkumarsampath.jarvis.di.viewmodel.ViewModelModule
+import com.arunkumarsampath.jarvis.preferences.PreferenceModule
 import com.arunkumarsampath.jarvis.util.scheduler.AppSchedulerProvider
 import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
 
-@Module(includes = [ViewModelModule::class])
+@Module(includes = [
+    ViewModelModule::class,
+    PreferenceModule::class
+])
 class AppModule(private var application: Application) {
 
     @Provides
@@ -49,4 +55,9 @@ class AppModule(private var application: Application) {
     internal fun povidesSchedulers(): SchedulerProvider {
         return AppSchedulerProvider()
     }
+
+    @Provides
+    internal fun provideOkHttp() = OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .build()
 }

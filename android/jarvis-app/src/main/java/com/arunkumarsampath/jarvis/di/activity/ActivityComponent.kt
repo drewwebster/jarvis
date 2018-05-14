@@ -28,7 +28,7 @@ import com.arunkumarsampath.jarvis.home.HomeActivity
 import dagger.Subcomponent
 
 @PerActivity
-@Subcomponent(modules = [(ActivityModule::class)])
+@Subcomponent(modules = [ActivityModule::class])
 interface ActivityComponent {
     fun newFragmentComponent(fragmentModule: FragmentModule): FragmentComponent
 

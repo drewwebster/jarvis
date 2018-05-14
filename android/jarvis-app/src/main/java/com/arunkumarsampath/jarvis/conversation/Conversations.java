@@ -1,4 +1,4 @@
-package com.arunkumarsampath.jarvis.home.conversation.data;
+package com.arunkumarsampath.jarvis.conversation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

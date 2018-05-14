@@ -1,23 +1,24 @@
-package com.arunkumarsampath.jarvis.home.conversation
+package com.arunkumarsampath.jarvis.home.conversation.delegates
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.arunkumarsampath.jarvis.R
 import com.arunkumarsampath.jarvis.extensions.inflate
+import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.layout_conversation_item_jarvis.*
+import kotlinx.android.synthetic.main.layout_conversation_item_user.*
 
 
-class JarvisMessageDelegate : AdapterDelegate<List<ConversationItem>>() {
+class UserMessageDelegate : AdapterDelegate<List<ConversationItem>>() {
 
     override fun isForViewType(items: List<ConversationItem>, position: Int): Boolean {
-        return items[position].who == ConversationItem.JARVIS
+        return items[position].who == ConversationItem.USER
     }
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        return MessageViewHolder(parent.inflate(R.layout.layout_conversation_item_jarvis))
+        return MessageViewHolder(parent.inflate(R.layout.layout_conversation_item_user))
     }
 
     override fun onBindViewHolder(

@@ -1,4 +1,4 @@
-package com.arunkumarsampath.jarvis.home.conversation.data
+package com.arunkumarsampath.jarvis.conversation
 
 import android.arch.paging.PagedList
 import android.arch.paging.RxPagedListBuilder

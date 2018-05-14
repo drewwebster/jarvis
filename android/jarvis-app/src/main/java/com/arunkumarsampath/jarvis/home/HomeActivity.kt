@@ -50,6 +50,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.mikepenz.materialdrawer.DrawerBuilder
+import com.mikepenz.materialdrawer.model.SwitchDrawerItem
 import com.petarmarijanovic.rxactivityresult.RxActivityResult
 import com.tbruyelle.rxpermissions2.RxPermissions
 import durdinapps.rxfirebase2.RxFirebaseAuth
@@ -82,7 +84,7 @@ class HomeActivity : BaseActivity() {
     @Inject
     lateinit var schedulerProvider: SchedulerProvider
 
-    lateinit var rxActivityResult: RxActivityResult
+    private lateinit var rxActivityResult: RxActivityResult
 
     private var isLoggedIn = false
         get() = auth.currentUser != null
@@ -97,11 +99,27 @@ class HomeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         rxActivityResult = RxActivityResult(this)
 
-        setSupportActionBar(toolbar)
+        setupDrawer()
         setupChatUi()
         observeViewModel()
 
         setupRecognition()
+    }
+
+    private fun setupDrawer() {
+        setSupportActionBar(toolbar)
+        with(DrawerBuilder()) {
+            withActivity(this@HomeActivity)
+            withToolbar(toolbar)
+            addDrawerItems(
+                    SwitchDrawerItem().apply {
+                        withName(R.string.docked)
+                        withChecked(homeViewModel.isDeviceDocked)
+                        withOnCheckedChangeListener { _, _, isChecked -> homeViewModel.isDeviceDocked = isChecked }
+                    }
+            )
+            build()
+        }
     }
 
     private fun setupRecognition() {
