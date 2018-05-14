@@ -26,17 +26,15 @@ import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.transition.TransitionManager
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.View
+import android.transition.TransitionManager
 import com.arunkumarsampath.jarvis.R
 import com.arunkumarsampath.jarvis.di.activity.ActivityComponent
 import com.arunkumarsampath.jarvis.di.viewmodel.ViewModelFactory
 import com.arunkumarsampath.jarvis.extensions.clicks
-import com.arunkumarsampath.jarvis.extensions.hide
+import com.arunkumarsampath.jarvis.extensions.gone
 import com.arunkumarsampath.jarvis.extensions.show
-import com.arunkumarsampath.jarvis.extensions.watch
+import com.arunkumarsampath.jarvis.extensions.watchNonNull
 import com.arunkumarsampath.jarvis.home.conversation.ConversationAdapter
 import com.arunkumarsampath.jarvis.util.common.base.BaseActivity
 import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
@@ -175,13 +173,25 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun observeViewModel() {
-        homeViewModel.conversationItemsLiveData.watch(this) { list ->
-            if (list != null) {
+        val owner = this
+        homeViewModel.run {
+            conversationItemsLiveData.watchNonNull(owner) { list ->
                 conversationAdapter.currentList = list
                 if (list.isNotEmpty()) {
                     chatRecyclerView.apply {
                         postDelayed({ smoothScrollToPosition(conversationAdapter.currentList.size - 1) }, 100)
                     }
+                }
+            }
+            conversationLoadingLiveData.watchNonNull(owner) { loading ->
+                TransitionManager.endTransitions(bottomCard)
+                TransitionManager.beginDelayedTransition(bottomCard)
+                if (loading) {
+                    messageSendButton.gone()
+                    progressBar.show()
+                } else {
+                    messageSendButton.show()
+                    progressBar.gone()
                 }
             }
         }
@@ -192,27 +202,9 @@ class HomeActivity : BaseActivity() {
         chatRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity).apply { stackFromEnd = true }
             adapter = conversationAdapter
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                    val visibleItem = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-                    if (visibleItem == adapter.itemCount - 1) {
-                        if (messageEditText.visibility != View.VISIBLE) {
-                            TransitionManager.beginDelayedTransition(bottomCard)
-                            messageEditText.show()
-                            messageSend.show()
-                        }
-                    } else {
-                        if (messageEditText.visibility != View.INVISIBLE) {
-                            TransitionManager.beginDelayedTransition(bottomCard)
-                            messageEditText.hide()
-                            messageSend.hide()
-                        }
-                    }
-                }
-            })
         }
 
-        subs.add(messageSend.clicks()
+        subs.add(messageSendButton.clicks()
                 .toFlowable(BackpressureStrategy.LATEST)
                 .map { messageEditText.text.trim().toString() }
                 .filter { it.isNotEmpty() }

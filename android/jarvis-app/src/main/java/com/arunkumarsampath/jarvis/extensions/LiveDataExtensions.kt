@@ -27,14 +27,13 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import arun.com.chromer.util.ActivityLifeCycleCallbackAdapter
 
-/**
- * Created by arunk on 05-02-2018.
- */
-
 inline fun <T> LiveData<T>.watch(owner: LifecycleOwner, crossinline observer: (T?) -> Unit) {
     this.observe(owner, Observer { observer(it) })
 }
 
+inline fun <T> LiveData<T>.watchNonNull(owner: LifecycleOwner, crossinline observer: (T) -> Unit) {
+    this.observe(owner, Observer { it?.let { observer(it) } })
+}
 
 inline fun <T> LiveData<T>.observeUntilOnDestroy(sourceActivity: Activity?, crossinline observer: (T?) -> Unit) {
     val valueObserver: Observer<T> = Observer {
