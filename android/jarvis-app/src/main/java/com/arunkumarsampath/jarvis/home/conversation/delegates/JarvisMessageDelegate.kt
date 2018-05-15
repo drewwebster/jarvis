@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import com.arunkumarsampath.jarvis.R
 import com.arunkumarsampath.jarvis.extensions.inflate
 import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
+import com.arunkumarsampath.jarvis.util.glide.GlideApp
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.layout_conversation_item_jarvis.*
@@ -34,6 +35,10 @@ class JarvisMessageDelegate : AdapterDelegate<List<ConversationItem>>() {
 
         fun bind(conversationItem: ConversationItem) {
             conversationText.text = conversationItem.content
+            GlideApp.with(conversationJarvisImage)
+                    .load(R.mipmap.ic_launcher)
+                    .circleCrop()
+                    .into(conversationJarvisImage)
         }
     }
 }

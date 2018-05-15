@@ -5,12 +5,18 @@ import android.support.v7.recyclerview.extensions.AsyncListDiffer
 import android.support.v7.util.AdapterListUpdateCallback
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import com.arunkumarsampath.jarvis.di.scopes.PerActivity
 import com.arunkumarsampath.jarvis.home.conversation.ConversationItem.Companion.ConversationDiffCallback
 import com.arunkumarsampath.jarvis.home.conversation.delegates.JarvisMessageDelegate
 import com.arunkumarsampath.jarvis.home.conversation.delegates.UserMessageDelegate
+import com.google.firebase.auth.FirebaseAuth
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager
+import javax.inject.Inject
 
-class ConversationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+@PerActivity
+class ConversationAdapter
+@Inject
+constructor(var firebaseAuth: FirebaseAuth) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val helper = AsyncListDiffer<ConversationItem>(
             AdapterListUpdateCallback(this),
@@ -23,7 +29,7 @@ class ConversationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val delegatesManager = AdapterDelegatesManager<List<ConversationItem>>().apply {
         addDelegate(JarvisMessageDelegate())
-        addDelegate(UserMessageDelegate())
+        addDelegate(UserMessageDelegate(firebaseAuth.currentUser))
     }
 
     override fun getItemCount(): Int {

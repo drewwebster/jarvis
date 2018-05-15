@@ -52,7 +52,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.SwitchDrawerItem
-import com.petarmarijanovic.rxactivityresult.RxActivityResult
 import com.tbruyelle.rxpermissions2.RxPermissions
 import durdinapps.rxfirebase2.RxFirebaseAuth
 import io.reactivex.BackpressureStrategy
@@ -83,17 +82,15 @@ class HomeActivity : BaseActivity() {
     lateinit var androidSpeechRecognizer: AndroidSpeechRecognizer
     @Inject
     lateinit var schedulerProvider: SchedulerProvider
-
-    private val rxActivityResult by lazy { RxActivityResult(this) }
-
-    private var isLoggedIn = false
-        get() = auth.currentUser != null
+    @Inject
+    lateinit var conversationAdapter: ConversationAdapter
 
     private var speechRecognizerSubject = PublishSubject.create<Int>()
 
-    private val conversationAdapter = ConversationAdapter()
-
     private val homeViewModel: HomeViewModel by lazy { ViewModelProviders.of(this, factory).get(HomeViewModel::class.java) }
+
+    private var isLoggedIn = false
+        get() = auth.currentUser != null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

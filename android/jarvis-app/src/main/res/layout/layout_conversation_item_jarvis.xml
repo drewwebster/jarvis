@@ -28,12 +28,11 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/conversation_jarvis_image"
+        android:id="@+id/conversationJarvisImage"
         android:layout_width="@dimen/conversation_avatar_size"
-        android:layout_height="48dp"
+        android:layout_height="@dimen/conversation_avatar_size"
         android:layout_marginRight="8dp"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/ic_launcher" />
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/conversationText"
