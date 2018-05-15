@@ -10,7 +10,14 @@ interface HotwordDetector {
         class Error : HotwordEvent()
     }
 
+    sealed class HotwordStatus {
+        class Started : HotwordStatus()
+        class Stopped : HotwordStatus()
+    }
+
     var hotwordEvents: Observable<HotwordEvent>
+
+    var hotwordStatus: Observable<HotwordStatus>
 
     fun start()
 

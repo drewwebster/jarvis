@@ -40,6 +40,8 @@ import com.arunkumarsampath.jarvis.util.common.base.BaseActivity
 import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent.Detected
+import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordStatus.Started
+import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordStatus.Stopped
 import com.arunkumarsampath.jarvis.voice.speech.AndroidSpeechRecognizer
 import com.arunkumarsampath.jarvis.voice.speech.AndroidSpeechRecognizer.Companion.NO_COMMAND
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -104,8 +106,10 @@ class HomeActivity : BaseActivity() {
 
     private fun setupDrawer() {
         setSupportActionBar(toolbar)
+        toolbar.setSubtitleTextAppearance(this, R.style.TextAppearance_AppCompat_Caption)
         with(DrawerBuilder()) {
             withActivity(this@HomeActivity)
+            withActionBarDrawerToggle(false)
             withToolbar(toolbar)
             addDrawerItems(
                     SwitchDrawerItem().apply {
@@ -142,6 +146,16 @@ class HomeActivity : BaseActivity() {
                     .filter { it != NO_COMMAND }
                     .doOnNext { homeViewModel.sendCommand(it) }
                     .subscribe())
+
+            subs.add(hotwordDetector.hotwordStatus
+                    .observeOn(schedulerProvider.ui())
+                    .subscribe { status ->
+                        TransitionManager.beginDelayedTransition(toolbar)
+                        when (status) {
+                            is Started -> toolbar.setSubtitle(R.string.listening)
+                            is Stopped -> toolbar.subtitle = null
+                        }
+                    })
         }
     }
 

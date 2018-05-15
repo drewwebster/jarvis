@@ -18,9 +18,9 @@ import android.os.Process.setThreadPriority
 import android.support.v4.content.ContextCompat.checkSelfPermission
 import com.arunkumarsampath.jarvis.di.scopes.PerActivity
 import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordEvent
+import com.arunkumarsampath.jarvis.voice.hotword.HotwordDetector.HotwordStatus
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.Subject
 import timber.log.Timber
 import java.io.File
 import java.io.InputStream
@@ -35,12 +35,12 @@ constructor(
         private val application: Application,
         lifecycleOwner: LifecycleOwner
 ) : HotwordDetector, LifecycleObserver {
-
     init {
         lifecycleOwner.lifecycle.addObserver(this)
     }
 
-    private var hotwordEventSubject: Subject<HotwordEvent> = BehaviorSubject.create<HotwordEvent>().toSerialized()
+    private var hotwordEventSubject = BehaviorSubject.create<HotwordEvent>().toSerialized()
+    private var hotwordStatusSubject = BehaviorSubject.create<HotwordStatus>().toSerialized()
 
     override var hotwordEvents: Observable<HotwordEvent> = hotwordEventSubject
             .map { event ->
@@ -50,6 +50,9 @@ constructor(
                 }
                 event
             }
+
+    override var hotwordStatus: Observable<HotwordStatus> = hotwordStatusSubject
+            .distinctUntilChanged { t1, t2 -> t2.javaClass == t1.javaClass }
 
     private var recordingThread: Thread? = null
     private var recognitionActive = false
@@ -85,6 +88,8 @@ constructor(
         }
         recognitionActive = true
         recordingThread = Thread { recordLoop() }.apply { start() }
+
+        hotwordStatusSubject.onNext(HotwordStatus.Started())
     }
 
     @OnLifecycleEvent(ON_STOP)
@@ -94,6 +99,7 @@ constructor(
             recognitionActive = false
             recordingThread = null
         }
+        hotwordStatusSubject.onNext(HotwordStatus.Stopped())
     }
 
     @OnLifecycleEvent(ON_DESTROY)
