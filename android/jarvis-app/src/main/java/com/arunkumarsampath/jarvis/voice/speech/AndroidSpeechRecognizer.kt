@@ -24,8 +24,7 @@ class AndroidSpeechRecognizer
     private val recognizerIntent = Intent(ACTION_RECOGNIZE_SPEECH).apply {
         putExtra(EXTRA_LANGUAGE_MODEL, LANGUAGE_MODEL_FREE_FORM)
         putExtra(EXTRA_CALLING_PACKAGE, activity.packageName)
-        putExtra(EXTRA_MAX_RESULTS, 3)
-        putExtra(EXTRA_PREFER_OFFLINE, true)
+        putExtra(EXTRA_MAX_RESULTS, 1)
     }
 
     val speechDetections: Single<String>
