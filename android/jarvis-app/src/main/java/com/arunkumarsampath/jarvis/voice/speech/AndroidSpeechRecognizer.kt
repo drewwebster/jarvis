@@ -73,7 +73,6 @@ class AndroidSpeechRecognizer
     }
 
     companion object {
-        const val REQUEST_CODE = 1002
         const val NO_COMMAND = "no-command"
     }
 }
