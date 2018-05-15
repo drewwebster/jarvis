@@ -82,7 +82,7 @@ class HomeActivity : BaseActivity() {
     @Inject
     lateinit var schedulerProvider: SchedulerProvider
 
-    private lateinit var rxActivityResult: RxActivityResult
+    private val rxActivityResult by lazy { RxActivityResult(this) }
 
     private var isLoggedIn = false
         get() = auth.currentUser != null
@@ -95,12 +95,10 @@ class HomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        rxActivityResult = RxActivityResult(this)
 
         setupDrawer()
         setupChatUi()
         observeViewModel()
-
         setupRecognition()
     }
 
@@ -136,7 +134,7 @@ class HomeActivity : BaseActivity() {
                     .doOnNext { speechRecognizerSubject.onNext(0) }
                     .subscribe())
 
-            subs.add(Observable.merge(speechRecognizerSubject, fab.clicks().map { 0 })
+            subs.add(Observable.merge(speechRecognizerSubject, voiceCommandButton.clicks().map { 0 })
                     .doOnNext { hotwordDetector.stop() }
                     .flatMapSingle { androidSpeechRecognizer.speechDetections }
                     .delay(300, TimeUnit.MILLISECONDS)

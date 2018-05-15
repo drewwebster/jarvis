@@ -26,4 +26,5 @@
     <color name="colorAccent">#4DD0E1</color>
     <color name="colorAccentDark">#00BCD4</color>
     <color name="colorAccentComplementary">#FF6E00</color>
+    <color name="colorBottomCardText">#6e8290</color>
 </resources>
