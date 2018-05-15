@@ -138,11 +138,11 @@ class HomeActivity : BaseActivity() {
 
             subs.add(Observable.merge(speechRecognizerSubject, fab.clicks().map { 0 })
                     .doOnNext { hotwordDetector.stop() }
-                    .flatMapSingle { androidSpeechRecognizer.speechDetected }
+                    .flatMapSingle { androidSpeechRecognizer.speechDetections }
                     .delay(300, TimeUnit.MILLISECONDS)
                     .doOnNext { hotwordDetector.start() }
                     .filter { it != NO_COMMAND }
-                    .doOnNext { homeViewModel.sendPush(it) }
+                    .doOnNext { homeViewModel.sendCommand(it) }
                     .subscribe())
         }
     }
@@ -168,7 +168,6 @@ class HomeActivity : BaseActivity() {
                     Timber.e(e)
                 }
             }
-            AndroidSpeechRecognizer.REQUEST_CODE -> androidSpeechRecognizer.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -209,7 +208,7 @@ class HomeActivity : BaseActivity() {
                 .map { messageEditText.text.trim().toString() }
                 .filter { it.isNotEmpty() }
                 .doOnNext {
-                    homeViewModel.sendPush(it)
+                    homeViewModel.sendCommand(it)
                     messageEditText.setText("")
                 }.subscribe())
     }

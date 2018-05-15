@@ -56,7 +56,7 @@ constructor(
                 })
     }
 
-    fun sendPush(message: String) {
+    fun sendCommand(message: String) {
         postMessageProcessor.onNext(message)
     }
 
