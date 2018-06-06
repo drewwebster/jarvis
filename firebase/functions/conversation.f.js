@@ -57,7 +57,7 @@ app.post("/conversations/", (req, res) => {
     conversationLog
       .push(conversation)
       .then(snapshot => {
-        res.status(201).json(utils.successReponse);
+        return res.status(201).json(utils.successReponse);
       })
       .catch(error => {
         console.log("Error creating entry", error.message);
