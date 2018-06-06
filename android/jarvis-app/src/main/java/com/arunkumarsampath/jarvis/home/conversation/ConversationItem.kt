@@ -38,7 +38,6 @@ data class ConversationItem(
     companion object {
         const val JARVIS = "jarvis"
         const val USER = "user"
-        const val REVERSE_TIMESTAMP = "reverse_timestamp"
 
         fun generateMockItems(howMuch: Int = 100): List<ConversationItem> {
             val chatItems = ArrayList<ConversationItem>()
