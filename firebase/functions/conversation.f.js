@@ -10,7 +10,9 @@ try {
 }
 const express = require("express");
 const app = express();
+
 const utils = require("./util/utils");
+const dialogFlowHelper = require("./util/dialogflow");
 
 // Express middleware that validates Firebase ID Tokens passed in the Authorization HTTP header.
 // The Firebase ID token needs to be passed as a Bearer token in the Authorization HTTP header like this:
@@ -56,6 +58,18 @@ app.post("/conversations/", (req, res) => {
 
     conversationLog
       .push(conversation)
+      .then(() => {
+        return dialogFlowHelper.fulfillmentResponse(query);
+      })
+      .then(fulfillmentResponse => {
+        // Create Jarvis' response
+        const jarvisResponse = {
+          content: utils.capitalize(fulfillmentResponse.trim()),
+          who: "jarvis",
+          timestamp: admin.database.ServerValue.TIMESTAMP
+        };
+        return conversationLog.push(jarvisResponse);
+      })
       .then(snapshot => {
         return res.status(201).json(utils.successReponse);
       })

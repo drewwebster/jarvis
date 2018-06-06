@@ -10,11 +10,11 @@
     "logs": "firebase functions:log"
   },
   "dependencies": {
+    "apiai": "^4.0.3",
     "camelcase": "^5.0.0",
-    "dialogflow": "^0.5.0",
     "express": "^4.16.3",
     "firebase-admin": "~5.12.1",
-    "firebase-functions": "^1.0.3",
+    "firebase-functions": "^1.0.4",
     "glob": "^7.1.2"
   },
   "devDependencies": {
