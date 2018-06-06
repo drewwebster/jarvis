@@ -141,7 +141,7 @@ class HomeActivity : BaseActivity() {
                     .delay(300, TimeUnit.MILLISECONDS)
                     .doOnNext { hotwordDetector.start() }
                     .filter { it != NO_COMMAND }
-                    .doOnNext { homeViewModel.sendCommand(it) }
+                    .doOnNext { homeViewModel.sendQuery(it) }
                     .subscribe())
 
             subs.add(hotwordDetector.hotwordStatus
@@ -217,7 +217,7 @@ class HomeActivity : BaseActivity() {
                 .map { messageEditText.text.trim().toString() }
                 .filter { it.isNotEmpty() }
                 .doOnNext {
-                    homeViewModel.sendCommand(it)
+                    homeViewModel.sendQuery(it)
                     messageEditText.setText("")
                 }.subscribe())
     }

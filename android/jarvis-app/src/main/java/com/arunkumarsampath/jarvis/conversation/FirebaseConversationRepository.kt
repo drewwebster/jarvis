@@ -40,7 +40,7 @@ constructor(
         return Flowable.create({ emitter ->
             val listener = object : ValueEventListener {
                 override fun onCancelled(databaseError: DatabaseError) {
-                    // emitter.onError(databaseError.toException())
+                    emitter.onError(databaseError.toException())
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {

@@ -24,14 +24,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-def FIREBASE_ADMIN_KEY = "FIREBASE_ADMIN_KEY"
-def PICHROME_DEVICE_ID = "PICHROME_DEVICE_ID"
-def JOIN_API_KEY = "JOIN_API_KEY"
+def JARVIS_BASE_URL = "JARVIS_BASE_URL"
 def properties = new Properties()
 properties.load(new FileInputStream("$rootDir/values.properties"))
-def firebaseAdminKey = properties.getProperty(FIREBASE_ADMIN_KEY, "\"\"")
-def piChromeId = properties.getProperty(PICHROME_DEVICE_ID, "\"\"")
-def joinApiKey = properties.getProperty(JOIN_API_KEY, "\"\"")
+def jarvisBaseUrl = properties.getProperty(JARVIS_BASE_URL, "\"\"")
 
 kapt {
     correctErrorTypes = true
@@ -51,9 +47,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        resValue "string", "firebaseAdminKey", "$firebaseAdminKey"
-        buildConfigField("String", PICHROME_DEVICE_ID, "\"${piChromeId}\"")
-        buildConfigField("String", JOIN_API_KEY, "\"${joinApiKey}\"")
+        buildConfigField("String", JARVIS_BASE_URL, "\"${jarvisBaseUrl}\"")
     }
 
     buildTypes {
@@ -75,8 +69,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.6.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.13'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 
@@ -89,8 +85,8 @@ dependencies {
 
     // RecyclerView Adapter
     implementation 'com.hannesdorfmann:adapterdelegates3:3.0.1'
-    implementation "android.arch.paging:runtime:1.0.0-beta1"
-    implementation "android.arch.paging:rxjava2:1.0.0-alpha1"
+    implementation "android.arch.paging:runtime:1.0.0"
+    implementation "android.arch.paging:rxjava2:1.0.0-rc1"
 
     // Activity results
     implementation 'com.petarmarijanovic:rx-activity-result:2.1.0'
