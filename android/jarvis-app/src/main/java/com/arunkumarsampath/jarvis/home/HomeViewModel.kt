@@ -5,7 +5,7 @@ import android.arch.lifecycle.ViewModel
 import com.arunkumarsampath.jarvis.conversation.ConversationRepository
 import com.arunkumarsampath.jarvis.device.DeviceRepository
 import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
-import com.arunkumarsampath.jarvis.serveraccess.PostMessageUseCase
+import com.arunkumarsampath.jarvis.conversation.usecases.CreateConversationUseCase
 import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.PublishProcessor
@@ -16,7 +16,7 @@ class HomeViewModel
 constructor(
         private val conversationRepository: ConversationRepository,
         private val deviceRepository: DeviceRepository,
-        private val postMessageUseCase: PostMessageUseCase,
+        private val postMessageUseCase: CreateConversationUseCase,
         private val sp: SchedulerProvider
 ) : ViewModel() {
     private val subs = CompositeDisposable()

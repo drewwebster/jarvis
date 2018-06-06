@@ -1,8 +1,8 @@
 package com.arunkumarsampath.jarvis.conversation
 
-import com.arunkumarsampath.jarvis.util.firebase.PagedFirebaseDatasourceFactory
-import com.arunkumarsampath.jarvis.util.firebase.SnapshotParser
 import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
+import com.arunkumarsampath.jarvis.util.firebase.SnapshotParser
+import com.arunkumarsampath.jarvis.util.firebase.datasource.PagedFirebaseDatasourceFactory
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -14,21 +14,16 @@ import javax.inject.Singleton
 class ConversationModule {
 
     @Provides
-    fun providesFb(): FirebaseDatabase {
-        return FirebaseDatabase.getInstance().apply { setPersistenceEnabled(true) }
+    @Singleton
+    @Conversations
+    fun provideConversationsReference(firebaseDb: FirebaseDatabase): DatabaseReference {
+        return firebaseDb.getReference(CONVERSATION_PATH)
     }
 
     @Provides
     @Singleton
     fun conversationRepository(firebaseConversationRepository: FirebaseConversationRepository): ConversationRepository {
         return firebaseConversationRepository
-    }
-
-    @Provides
-    @Singleton
-    @Conversations
-    fun provideConversationsReference(firebaseDb: FirebaseDatabase): DatabaseReference {
-        return firebaseDb.getReference(CONVERSATION_PATH)
     }
 
     @Provides
@@ -43,7 +38,7 @@ class ConversationModule {
     fun conversationParser(): SnapshotParser<ConversationItem> = conversationItemParser
 
     companion object {
-        const val CONVERSATION_PATH = "/conversations/conversations_log"
+        const val CONVERSATION_PATH = "/conversations/conversationsLog"
 
         val conversationItemParser = object : SnapshotParser<ConversationItem> {
             override fun parse(dataSnapshot: DataSnapshot): ConversationItem {

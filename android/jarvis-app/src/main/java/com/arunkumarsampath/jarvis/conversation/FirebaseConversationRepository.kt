@@ -3,8 +3,8 @@ package com.arunkumarsampath.jarvis.conversation
 import android.arch.paging.PagedList
 import android.arch.paging.RxPagedListBuilder
 import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
-import com.arunkumarsampath.jarvis.util.firebase.PagedFirebaseDatasourceFactory
 import com.arunkumarsampath.jarvis.util.firebase.SnapshotParser
+import com.arunkumarsampath.jarvis.util.firebase.datasource.PagedFirebaseDatasourceFactory
 import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

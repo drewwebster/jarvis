@@ -1,8 +1,9 @@
-package com.arunkumarsampath.jarvis.util.firebase
+package com.arunkumarsampath.jarvis.util.firebase.datasource
 
 import android.arch.paging.ItemKeyedDataSource
 import android.support.annotation.CallSuper
 import com.arunkumarsampath.jarvis.util.common.firebase.KeyProvider
+import com.arunkumarsampath.jarvis.util.firebase.SnapshotParser
 import com.google.firebase.database.*
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
