@@ -24,10 +24,15 @@ constructor(
     val conversationItemsLiveData = MutableLiveData<List<ConversationItem>>()
     val conversationLoadingLiveData = MutableLiveData<Boolean>()
 
-    private val postMessageProcessor = PublishProcessor.create<String>()
+    private val conversationQueryProcessor = PublishProcessor.create<String>()
+    private val conversationLoadProcessor = PublishProcessor.create<Int>()
+
+    private var loading: Boolean = false
+        set(value) = conversationLoadingLiveData.postValue(value)
 
     init {
         initPostMessageProcessor()
+        initConversationProcessor()
     }
 
     var isDeviceDocked: Boolean
@@ -36,30 +41,37 @@ constructor(
             deviceRepository.deviceDocked = value
         }
 
+
+    private fun initConversationProcessor() {
+        subs.add(conversationLoadProcessor
+                .onBackpressureBuffer()
+                .doOnNext { loading = true }
+                .observeOn(sp.io())
+                .concatMap { conversationRepository.conversations(100).onErrorReturn { emptyList() } }
+                .doOnNext { loading = true }
+                .subscribe { conversations ->
+                    conversationItemsLiveData.postValue(conversations)
+                    loading = false
+                })
+    }
+
+
     private fun initPostMessageProcessor() {
-        subs.add(postMessageProcessor.onBackpressureBuffer()
-                .doOnNext { conversationLoadingLiveData.postValue(true) }
+        subs.add(conversationQueryProcessor
+                .onBackpressureBuffer()
+                .doOnNext { loading = true }
                 .observeOn(sp.io())
                 .concatMapSingle(queryUserCase::buildSingle)
-                .observeOn(sp.ui())
-                .doOnNext { conversationLoadingLiveData.value = false }
+                .doOnNext { loading = false }
                 .subscribe())
     }
 
     fun loadConversations() {
-        subs.add(conversationRepository
-                .conversations(100)
-                .onErrorReturn { emptyList() }
-                .subscribeOn(sp.io())
-                .doOnNext { conversationLoadingLiveData.postValue(true) }
-                .subscribe { conversations ->
-                    conversationItemsLiveData.postValue(conversations)
-                    conversationLoadingLiveData.postValue(false)
-                })
+        conversationLoadProcessor.onNext(0)
     }
 
     fun sendQuery(query: String) {
-        postMessageProcessor.onNext(query)
+        conversationQueryProcessor.onNext(query)
     }
 
     override fun onCleared() {
