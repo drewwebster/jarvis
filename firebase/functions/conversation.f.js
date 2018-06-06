@@ -37,36 +37,34 @@ const authenticate = (req, res, next) => {
     });
 };
 
-// app.use(authenticate);
+app.use(authenticate);
 
 // Creates new conversation entry in database, hits DialogFlow to determine a response and makes
 // an answer entry
-app.post("/conversations/", async (req, res) => {
-  try {
-    const query = req.body.query;
-    if (query) {
-      const conversation = {
-        content: utils.capitalize(query.trim()),
-        who: "user",
-        timestamp: admin.database.ServerValue.TIMESTAMP
-      };
+app.post("/conversations/", (req, res) => {
+  const query = req.body.query;
+  if (query) {
+    const conversation = {
+      content: utils.capitalize(query.trim()),
+      who: "user",
+      timestamp: admin.database.ServerValue.TIMESTAMP
+    };
 
-      let conversationLog = admin
-        .database()
-        .ref(`conversations/conversationsLog`);
+    let conversationLog = admin
+      .database()
+      .ref(`conversations/conversationsLog`);
 
-      await conversationLog.push(conversation); // Push to conversation log
-      res.status(201).send(
-        JSON.stringify({
-          data: {}
-        })
-      );
-    } else {
-      res.status(500).send("Missing query");
-    }
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
+    conversationLog
+      .push(conversation)
+      .then(snapshot => {
+        res.status(201).json(utils.successReponse);
+      })
+      .catch(error => {
+        console.log("Error creating entry", error.message);
+        res.sendStatus(500);
+      });
+  } else {
+    res.status(500).send("Missing query");
   }
 });
 
