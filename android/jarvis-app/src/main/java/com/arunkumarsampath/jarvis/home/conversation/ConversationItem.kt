@@ -30,8 +30,7 @@ data class ConversationItem(
         var key: String = "",
         var who: String = "",
         var content: String = "",
-        var timestamp: Long = 0L,
-        var reverse_timestamp: Long = 0L
+        var timestamp: Long = 0L
 ) : KeyProvider {
 
     override fun key() = key
