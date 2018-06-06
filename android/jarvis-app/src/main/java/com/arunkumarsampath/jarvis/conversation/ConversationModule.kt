@@ -1,6 +1,9 @@
 package com.arunkumarsampath.jarvis.conversation
 
 import com.arunkumarsampath.jarvis.BuildConfig
+import com.arunkumarsampath.jarvis.conversation.repository.remote.ConversationApi
+import com.arunkumarsampath.jarvis.conversation.repository.ConversationRepository
+import com.arunkumarsampath.jarvis.conversation.repository.FirebaseConversationRepository
 import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
 import com.arunkumarsampath.jarvis.util.firebase.SnapshotParser
 import com.arunkumarsampath.jarvis.util.firebase.datasource.PagedFirebaseDatasourceFactory

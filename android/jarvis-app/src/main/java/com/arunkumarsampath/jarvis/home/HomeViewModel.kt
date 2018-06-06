@@ -2,7 +2,7 @@ package com.arunkumarsampath.jarvis.home
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.arunkumarsampath.jarvis.conversation.ConversationRepository
+import com.arunkumarsampath.jarvis.conversation.repository.ConversationRepository
 import com.arunkumarsampath.jarvis.conversation.usecases.ConversationQueryUseCase
 import com.arunkumarsampath.jarvis.device.DeviceRepository
 import com.arunkumarsampath.jarvis.home.conversation.ConversationItem

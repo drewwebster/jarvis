@@ -1,4 +1,4 @@
-package com.arunkumarsampath.jarvis.conversation
+package com.arunkumarsampath.jarvis.conversation.repository
 
 import android.arch.paging.PagedList
 import com.arunkumarsampath.jarvis.home.conversation.ConversationItem

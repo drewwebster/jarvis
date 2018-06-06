@@ -1,4 +1,4 @@
-package com.arunkumarsampath.jarvis.conversation
+package com.arunkumarsampath.jarvis.conversation.repository.remote
 
 import com.arunkumarsampath.jarvis.conversation.model.ConversationQuery
 import io.reactivex.Completable

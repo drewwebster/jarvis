@@ -1,6 +1,6 @@
 package com.arunkumarsampath.jarvis.conversation.usecases
 
-import com.arunkumarsampath.jarvis.conversation.ConversationApi
+import com.arunkumarsampath.jarvis.conversation.repository.remote.ConversationApi
 import com.arunkumarsampath.jarvis.conversation.model.ConversationQuery
 import com.arunkumarsampath.jarvis.util.common.UseCase
 import com.arunkumarsampath.jarvis.util.scheduler.SchedulerProvider

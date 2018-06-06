@@ -1,7 +1,8 @@
-package com.arunkumarsampath.jarvis.conversation
+package com.arunkumarsampath.jarvis.conversation.repository
 
 import android.arch.paging.PagedList
 import android.arch.paging.RxPagedListBuilder
+import com.arunkumarsampath.jarvis.conversation.Conversations
 import com.arunkumarsampath.jarvis.home.conversation.ConversationItem
 import com.arunkumarsampath.jarvis.util.firebase.SnapshotParser
 import com.arunkumarsampath.jarvis.util.firebase.datasource.PagedFirebaseDatasourceFactory
