@@ -10,6 +10,7 @@ try {
 }
 const express = require("express");
 const app = express();
+const utils = require("./util/utils");
 
 // Express middleware that validates Firebase ID Tokens passed in the Authorization HTTP header.
 // The Firebase ID token needs to be passed as a Bearer token in the Authorization HTTP header like this:
@@ -38,24 +39,35 @@ const authenticate = (req, res, next) => {
 
 // app.use(authenticate);
 
-// GET /api/conversations
-app.get("/conversations/", (req, res) => {
-  let query = admin.database().ref(`conversations/conversations_log`);
-  return query
-    .once("value")
-    .then(snapshot => {
-      let messages = [];
-      snapshot.forEach(childSnapshot => {
-        let message = childSnapshot.val();
-        message.key = childSnapshot.key;
-        messages.push(message);
-      });
-      return res.status(200).json(messages);
-    })
-    .catch(error => {
-      console.log("Error getting messages", error.message);
-      res.sendStatus(500);
-    });
+// Creates new conversation entry in database, hits DialogFlow to determine a response and makes
+// an answer entry
+app.post("/conversations/", async (req, res) => {
+  try {
+    const query = req.body.query;
+    if (query) {
+      const conversation = {
+        content: utils.capitalize(query.trim()),
+        who: "user",
+        timestamp: admin.database.ServerValue.TIMESTAMP
+      };
+
+      let conversationLog = admin
+        .database()
+        .ref(`conversations/conversationsLog`);
+
+      await conversationLog.push(conversation); // Push to conversation log
+      res.status(201).send(
+        JSON.stringify({
+          data: {}
+        })
+      );
+    } else {
+      res.status(500).send("Missing query");
+    }
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 });
 
 exports = module.exports = functions.https.onRequest(app);
